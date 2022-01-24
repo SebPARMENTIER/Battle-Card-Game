@@ -1,0 +1,60 @@
+.App {
+  height: 100vh;
+  background-color: green;
+  display: flex;
+  flex-direction: column;
+
+  &-button {
+    width: 50px;
+    height: 30px;
+  }
+
+  &-area {
+    display: flex;
+    justify-content: space-between;
+
+    &-player1 {
+      width: 50vw;
+      display: flex;
+      justify-content: space-around;
+
+      &-deck {
+        &-draw {
+          width: 226px;
+          height: 314px;
+          border-radius: 15px;
+          background-image: url("../back_card.jpg");
+          background-size: contain;
+          background-position: center;
+        }
+      }
+
+      &-play {
+        width: 226px;
+        height: 314px;
+      }
+    }
+
+    &-player2 {
+      width: 50vw;
+      display: flex;
+      justify-content: space-around;
+
+      &-deck {
+        &-draw {
+          width: 226px;
+          height: 314px;
+          border-radius: 15px;
+          background-image: url("../back_card.jpg");
+          background-size: contain;
+          background-position: center;
+        }
+      }
+
+      &-play {
+        width: 226px;
+        height: 314px;
+      }
+    }
+  }
+}
