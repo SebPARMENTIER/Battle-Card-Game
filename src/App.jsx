@@ -5,8 +5,34 @@ function App() {
   const [deckId, setDeckId] = useState();
   const [cards1, setCards1] = useState([]);
   const [cards2, setCards2] = useState([]);
-  const [isPlaying1, setIsPlaying1] = useState(false);
-  const [isPlaying2, setIsPlaying2] = useState(false);
+
+  const [deck_id, setDeck_id] = useState();
+  const pilePlayer10 = "pilePlayer10";
+
+  const startGame = async () => {
+    
+      const res = await fetch("http://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
+      const data = await res.json();
+      setDeck_id(data.deck_id);
+
+      console.log("deckId", deck_id);
+
+      const res1 = await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=26`);
+      const data1 = await res1.json();
+   
+      const deckPlayer10 = data1.cards.map((c) => c.code).join(',');
+
+      
+
+      await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${pilePlayer10}/add/?cards=${deckPlayer10}`);
+
+      const res3 = await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${pilePlayer10}/list`);
+      const data3 = await res3.json();
+
+      console.log('data3', data3);
+  }
+
+  
 
   const getDeck = () => {
     const fetchData = async () => {
@@ -30,7 +56,6 @@ function App() {
       
     }
     fetchDataCardsPlayer1();
-    setIsPlaying1(true);
   };
 
   console.log("cards player 1", deckPlayer1);
@@ -43,7 +68,6 @@ function App() {
       
     }
     fetchDataCardsPlayer2();
-    setIsPlaying2(true);
   };
 
   console.log("cards player 2", deckPlayer2);
@@ -62,7 +86,6 @@ function App() {
       const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/add/?cards=${deckPlayer1Array.join(',')}`);
       const data = await res.json();
       setCards1(data.piles);
-      //console.log("cards", cards);
     }
     fetchDataPilePlayer1();
   };
@@ -92,7 +115,6 @@ function App() {
       const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/add/?cards=${deckPlayer2Array.join(',')}`);
       const data = await res.json();
       setCards2(data.piles);
-      //console.log("cards", cards);
     }
     fetchDataPilePlayer2();
   };
@@ -125,9 +147,13 @@ function App() {
 
   const drawCardPlayer1 = () => {
     const fetchDataDrawCardPlayer1 = async () => {
-      const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/draw/?count=1`);
+      const res = await fetch(`http://deckofcardsapi.com/api/deck/${deck_id}/pile/${pilePlayer10}/draw/?count=1`);
       const data = await res.json();
       setCardPlayer1(data.cards);
+      const res4 = await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${pilePlayer10}/list`);
+      const data4 = await res4.json();
+
+      console.log('data4', data4);
     }
     fetchDataDrawCardPlayer1();
   };
@@ -145,7 +171,7 @@ function App() {
 
   return (
     <div className="App">
-      <button onClick={getDeck} className="App-button">Jouer</button>
+      <button onClick={startGame} className="App-button">Jouer</button>
       <button onClick={drawCardsPlayer1} className="App-button">Play1</button>
       <button onClick={drawCardsPlayer2} className="App-button">Play2</button>
       <button onClick={pilePlayer1Data} className="App-button">Pile1</button>
