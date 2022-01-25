@@ -22,6 +22,7 @@
         &-draw {
           width: 226px;
           height: 314px;
+          border: 1px solid lightgoldenrodyellow;
           border-radius: 15px;
           background-image: url("../back_card.jpg");
           background-size: contain;
@@ -44,6 +45,7 @@
         &-draw {
           width: 226px;
           height: 314px;
+          border: 1px solid lightgoldenrodyellow;
           border-radius: 15px;
           background-image: url("../back_card.jpg");
           background-size: contain;
@@ -57,4 +59,8 @@
       }
     }
   }
+}
+
+.hidden {
+  visibility: hidden;
 }
