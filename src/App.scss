@@ -1,38 +1,87 @@
 .App {
   height: 100vh;
   background-color: green;
+  color: white;
   display: flex;
   flex-direction: column;
 
-  &-button {
-    width: 50px;
-    height: 30px;
+  &-home {
+    text-align: center;
+    height: 100%;
+
+    &-rules {
+
+      &-header {
+        font-size: 5em;
+      }
+
+      &-desc {
+        font-size: 1.2em;
+        padding: 0 1em;
+      }
+    }
+
+    &-button {
+      width: 300px;
+      height: 180px;
+      margin-top: 2em;
+      color: green;
+      font-size: 3em;
+      border-radius: 15px;
+    }
   }
 
   &-area {
+    height: 100%;
     display: flex;
     justify-content: space-between;
+    align-items: center;
 
     &-player1 {
       width: 50vw;
       display: flex;
+      flex-direction: column;
       justify-content: space-around;
+      align-items: center;
+      background-color: lightseagreen;
+      padding: 2em 0;
 
-      &-deck {
-        &-draw {
-          width: 226px;
-          height: 314px;
-          border: 1px solid lightgoldenrodyellow;
-          border-radius: 15px;
-          background-image: url("../back_card.jpg");
-          background-size: contain;
-          background-position: center;
-        }
+      &-name {
+        text-align: center;
+        font-size: 3em;
+        padding-bottom: 1em;
       }
 
-      &-play {
-        width: 226px;
-        height: 314px;
+      &-game {
+        width: 100%;
+        display: flex;
+        justify-content: space-around;
+
+        &-deck {
+
+          &-button {
+
+            &-draw {
+              width: 226px;
+              height: 314px;
+              border: 1px solid lightgoldenrodyellow;
+              border-radius: 15px;
+              background-image: url("../back_card.jpg");
+              background-size: contain;
+              background-position: center;
+            }
+          }
+
+          &-count {
+            text-align: center;
+            padding-top: 0.5em;
+          }
+        }
+
+        &-play {
+          width: 226px;
+          height: 314px;
+        }
       }
     }
 
@@ -42,6 +91,13 @@
       justify-content: space-around;
 
       &-deck {
+
+        &-name {
+          text-align: center;
+          font-size: 2em;
+          padding-bottom: 1em;
+        }
+
         &-draw {
           width: 226px;
           height: 314px;
@@ -50,6 +106,11 @@
           background-image: url("../back_card.jpg");
           background-size: contain;
           background-position: center;
+        }
+
+        &-count {
+          text-align: center;
+          padding-top: 1em;
         }
       }
 
@@ -63,4 +124,8 @@
 
 .hidden {
   visibility: hidden;
+}
+
+em {
+  font-weight: bold;
 }

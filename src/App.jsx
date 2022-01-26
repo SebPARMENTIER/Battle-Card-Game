@@ -15,12 +15,14 @@ function App() {
   const [isBattlePlayer2, setIsBattlePlayer2] = useState(false);
   const [deckBattlePlayer1, setDeckBattlePlayer1] = useState([]);
   const [deckBattlePlayer2, setDeckBattlePlayer2] = useState([]);
+  const [isGameStarted, setIsGameStarted] = useState(false);
 
   const pilePlayer1 = "pilePlayer1";
   const pilePlayer2 = "pilePlayer2";
 
   const startGame = async () => {
-    
+    setIsGameStarted(true);
+
     // Get a deck with 52 cards
     const res = await fetch("http://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
     const data = await res.json();
@@ -37,16 +39,26 @@ function App() {
     // Create a pile for player 1 and add 26 cards to the pile
     await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${pilePlayer1}/add/?cards=${deckPlayer1}`);
 
+    // Create a list for player 1
+    const res2 = await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${pilePlayer1}/list`);
+      const data2 = await res2.json();
+      setListPlayer1(data2.piles.pilePlayer1.remaining);
+
     // FOR PLAYER 2
     // Draw 26 cards for player 2
-    const res2 = await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=26`);
-    const data2 = await res2.json();
+    const res3 = await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=26`);
+    const data3 = await res3.json();
 
     // Create a string with cards to create a pile for player 2
-    const deckPlayer2 = data2.cards.map((c) => c.code).join(',');
+    const deckPlayer2 = data3.cards.map((c) => c.code).join(',');
 
     // Create a pile for player 2 and add 26 cards to the pile
     await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${pilePlayer2}/add/?cards=${deckPlayer2}`);
+
+    // Create a list for player 2
+    const res4 = await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${pilePlayer2}/list`);
+      const data4 = await res4.json();
+      setListPlayer2(data4.piles.pilePlayer2.remaining);
   };
   
   // Draw a card from deck player 1
@@ -114,6 +126,12 @@ function App() {
   if (waitPlayer1 && waitPlayer2) {
     setWaitPlayer1(false);
     setWaitPlayer2(false);
+    if (listPlayer1 === 0) {
+      alert('Player 2 a gagné !!!');
+    }
+    if (listPlayer2 === 0) {
+      alert('Player 1 a gagné !!!');
+    }
     if (drawCardDeckPlayer1[0].value === "ACE") {
       drawCardDeckPlayer1[0].value = "14";
     }
@@ -197,33 +215,57 @@ function App() {
   }
   return (
     <div className="App">
-      <button onClick={startGame} className="App-button">Jouer</button>
-      <div className="App-area">
-        <div className="App-area-player1">
-          <div className="App-area-player1-deck">
-            <button
-              className="App-area-player1-deck-draw"
-              disabled={waitPlayer1 ? true : false}
-              onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
-              aria-label="start-game"
-            >
-            </button>
-            {deckId && (
-              <div className="App-area-player1-deck-count">
-              {listPlayer1}
+      {!isGameStarted && (
+        <div className="App-home">
+          <div className="App-home-rules">
+            <h1 className="App-home-rules-header">
+            La bataille, les règles du jeu
+            </h1>
+            <div className="App-home-rules-desc">
+              On distribue les 52 cartes aux joueurs (la bataille se joue généralement à deux) qui les rassemblent face cachée en paquet devant eux.
+              Chacun tire la carte du dessus de son paquet et la pose face visible sur la table.
+              Celui qui a la carte la plus forte ramasse les autres cartes.
+              L'as est la plus forte carte, puis roi, dame, valet, 10, etc.
+              Lorsque deux joueurs posent en même temps deux cartes de même valeur il y a "bataille". Lorsqu'il y a "bataille" les joueurs tirent la carte suivante et la posent, face cachée, sur la carte précédente. Puis, ils tirent une deuxième carte qu'ils posent cette fois-ci face découverte et c'est cette dernière qui départagera les joueurs. Celui qui la valeur la plus forte, l'importe.
+              Le gagnant est celui qui remporte toutes les cartes du paquet.
             </div>
-            )}
           </div>
-          <div className={isBattlePlayer1 ? "App-area-player1-deck-draw" : "App-area-player1-play"}>
-            {drawCardDeckPlayer1.map((c) => (
-              <img
-                key={c.code}
-                src={c.image}
-                alt={c.code}
-                className={isBattlePlayer1 ? "hidden" : "App-area-player1-play-img"}
-              />
-            ))}
+          <button onClick={startGame} className="App-home-button">Jouer</button>
+        </div>
+      )}
+      {isGameStarted && (
+        <div className="App-area">
+        <div className="App-area-player1">
+          <div className="App-area-player1-name">Player 1</div>
+          <div className="App-area-player1-game">
+            <div className="App-area-player1-game-deck">
+              <div className="App-area-player1-game-deck-button">
+                <button
+                    className="App-area-player1-game-deck-button-draw"
+                    disabled={waitPlayer1 ? true : false}
+                    onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
+                    aria-label="start-game"
+                >
+                </button>
+              </div>
+              {deckId && (
+                <div className="App-area-player1-game-deck-count">
+                  Cartes restantes : <em>{listPlayer1}</em>
+                </div>
+              )}
+            </div>
+            <div className={isBattlePlayer1 ? "App-area-player1-game-deck-button-draw" : "App-area-player1-game-play"}>
+              {drawCardDeckPlayer1.map((c) => (
+                <img
+                  key={c.code}
+                  src={c.image}
+                  alt={c.code}
+                  className={isBattlePlayer1 ? "hidden" : "App-area-player1-game-play-img"}
+                />
+              ))}
+            </div>
           </div>
+          
         </div>
         <div className="App-area-player2">
           <div className={isBattlePlayer2 ? "App-area-player2-deck-draw" : "App-area-player2-play"}>
@@ -237,6 +279,7 @@ function App() {
             ))}
             </div>
           <div className="App-area-player2-deck">
+            <div className="App-area-player2-deck-name">Player 2</div>
             <button
               className="App-area-player2-deck-draw"
               disabled={waitPlayer2 ? true : false}
@@ -246,12 +289,13 @@ function App() {
             </button>
             {deckId && (
               <div className="App-area-player2-deck-count">
-              {listPlayer2}
+                Cartes restantes : <em>{listPlayer2}</em>
             </div>
             )}
           </div>
         </div>
       </div>
+      )}
     </div>
   )
 }
