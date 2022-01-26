@@ -5,12 +5,16 @@ function App() {
   const [deckId, setDeckId] = useState();
   const [drawCardDeckPlayer1, setDrawCardDeckPlayer1] = useState([]);
   const [drawCardDeckPlayer2, setDrawCardDeckPlayer2] = useState([]);
+  const [drawBattleCardDeckPlayer1, setDrawBattleCardDeckPlayer1] = useState([]);
+  const [drawBattleCardDeckPlayer2, setDrawBattleCardDeckPlayer2] = useState([]);
   const [listPlayer1, setListPlayer1] = useState();
   const [listPlayer2, setListPlayer2] = useState();
   const [waitPlayer1, setWaitPlayer1] = useState(false);
   const [waitPlayer2, setWaitPlayer2] = useState(false);
-  const [isBattle, setIsBattle] = useState(false);
-
+  const [startBattlePlayer1, setStartBattlePlayer1] = useState(false);
+  const [startBattlePlayer2, setStartBattlePlayer2] = useState(false);
+  const [isBattlePlayer1, setIsBattlePlayer1] = useState(false);
+  const [isBattlePlayer2, setIsBattlePlayer2] = useState(false);
 
   const pilePlayer1 = "pilePlayer1";
   const pilePlayer2 = "pilePlayer2";
@@ -54,6 +58,7 @@ function App() {
       setWaitPlayer1(true);
     }
     fetchDataDrawCardPlayer1();
+    setIsBattlePlayer1(false);
   };
 
   // Draw a card from deck player 2
@@ -65,6 +70,33 @@ function App() {
       setWaitPlayer2(true);
     }
     fetchDataDrawCardPlayer2();
+    setIsBattlePlayer2(false);
+  };
+
+  // Draw a card from deck player 1 when battle
+  const drawBattleCardPlayer1 = () => {
+    setIsBattlePlayer1(true);
+    const fetchDataDrawBattleCardPlayer1 = async () => {
+      const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/draw/bottom/?count=1`);
+      const data = await res.json();
+      setDrawBattleCardDeckPlayer1(data.cards);
+    }
+    fetchDataDrawBattleCardPlayer1();
+    setWaitPlayer1(false);
+    setStartBattlePlayer1(false);
+  };
+
+  // Draw a card from deck player 2 when battle
+  const drawBattleCardPlayer2 = () => {
+    setIsBattlePlayer2(true);
+    const fetchDataDrawBattleCardPlayer1 = async () => {
+      const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/draw/bottom/?count=1`);
+      const data = await res.json();
+      setDrawBattleCardDeckPlayer2(data.cards);
+    }
+    fetchDataDrawBattleCardPlayer1();
+    setWaitPlayer2(false);
+    setStartBattlePlayer2(false);
   };
   
   if (waitPlayer1 && waitPlayer2) {
@@ -95,6 +127,8 @@ function App() {
       drawCardDeckPlayer2[0].value = "11";
     }
     if (Number(drawCardDeckPlayer1[0].value) > Number(drawCardDeckPlayer2[0].value)) {
+      setIsBattlePlayer1(false);
+      setIsBattlePlayer2(false);
       const fetchDataReturnCardsToDeckPlayer1 = async () => {
         await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/add/?cards=${drawCardDeckPlayer1[0].code},${drawCardDeckPlayer2[0].code}`);
         const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/list`);
@@ -106,6 +140,8 @@ function App() {
       setWaitPlayer1(false);
       setWaitPlayer2(false);
     } else if (Number(drawCardDeckPlayer1[0].value) < Number(drawCardDeckPlayer2[0].value)) {
+      setIsBattlePlayer1(false);
+      setIsBattlePlayer2(false);
       const fetchDataReturnCardsToDeckPlayer2 = async () => {
         await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/add/?cards=${drawCardDeckPlayer1[0].code},${drawCardDeckPlayer2[0].code}`);
         const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/list`);
@@ -116,9 +152,21 @@ function App() {
       fetchDataReturnCardsToDeckPlayer2();
       setWaitPlayer1(false);
       setWaitPlayer2(false);
+    }  else if (Number(drawCardDeckPlayer1[0].value) === Number(drawCardDeckPlayer2[0].value)) {
+      setStartBattlePlayer1(true);
+      setStartBattlePlayer2(true);
+      let deckBattlePlayer1 = [];
+      let deckBattlePlayer2 = [];
+      deckBattlePlayer1.push(drawCardDeckPlayer1);
+      deckBattlePlayer2.push(drawCardDeckPlayer2);
+      setWaitPlayer1(false);
+      setWaitPlayer2(false);
+      console.log("battle");
+      deckBattlePlayer1.push(drawBattleCardDeckPlayer1);
+      deckBattlePlayer2.push(drawBattleCardDeckPlayer2);
+      console.log(deckBattlePlayer1, deckBattlePlayer2);
     }
   }
-
   return (
     <div className="App">
       <button onClick={startGame} className="App-button">Jouer</button>
@@ -128,7 +176,7 @@ function App() {
             <button
               className="App-area-player1-deck-draw"
               disabled={waitPlayer1 ? true : false}
-              onClick={drawCardPlayer1}
+              onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
               aria-label="start-game"
             >
             </button>
@@ -138,25 +186,25 @@ function App() {
             </div>
             )}
           </div>
-          <div className={isBattle ? "App-area-player1-deck-draw" : "App-area-player1-play"}>
+          <div className={isBattlePlayer1 ? "App-area-player1-deck-draw" : "App-area-player1-play"}>
             {drawCardDeckPlayer1.map((c) => (
               <img
                 key={c.code}
                 src={c.image}
                 alt={c.code}
-                className={isBattle ? "hidden" : "App-area-player1-play-img"}
+                className={isBattlePlayer1 ? "hidden" : "App-area-player1-play-img"}
               />
             ))}
           </div>
         </div>
         <div className="App-area-player2">
-          <div className={isBattle ? "App-area-player2-deck-draw" : "App-area-player2-play"}>
+          <div className={isBattlePlayer2 ? "App-area-player2-deck-draw" : "App-area-player2-play"}>
             {drawCardDeckPlayer2.map((c) => (
               <img
                 key={c.code}
                 src={c.image}
                 alt={c.code}
-                className={isBattle ? "hidden" : "App-area-player1-play-img"}
+                className={isBattlePlayer2 ? "hidden" : "App-area-player1-play-img"}
               />
             ))}
             </div>
@@ -164,7 +212,7 @@ function App() {
             <button
               className="App-area-player2-deck-draw"
               disabled={waitPlayer2 ? true : false}
-              onClick={drawCardPlayer2}
+              onClick={startBattlePlayer2 ? drawBattleCardPlayer2 : drawCardPlayer2}
               aria-label="start-game"
             >
             </button>
