@@ -16,12 +16,14 @@ function App() {
   const [deckBattlePlayer1, setDeckBattlePlayer1] = useState([]);
   const [deckBattlePlayer2, setDeckBattlePlayer2] = useState([]);
   const [isGameStarted, setIsGameStarted] = useState(false);
+  const [showRules, setShowRules] = useState(true);
 
   const pilePlayer1 = "pilePlayer1";
   const pilePlayer2 = "pilePlayer2";
 
   const startGame = async () => {
     setIsGameStarted(true);
+    setShowRules(false);
 
     // Get a deck with 52 cards
     const res = await fetch("http://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
@@ -213,26 +215,78 @@ function App() {
     }
     console.log("deck battle P1 et P2", deckBattlePlayer1, deckBattlePlayer2);
   }
+    
+  const showRulesAgain = () => {
+    setShowRules(!showRules)
+  };
+
+  const showHome = () => {
+    setIsGameStarted(false);
+    setDeckId();
+    setDrawCardDeckPlayer1([]);
+    setDrawCardDeckPlayer2([]);
+    setShowRules(true);
+  }
+
   return (
     <div className="App">
-      {!isGameStarted && (
-        <div className="App-home">
-          <div className="App-home-rules">
-            <h1 className="App-home-rules-header">
-            La bataille, les règles du jeu
-            </h1>
-            <div className="App-home-rules-desc">
-              On distribue les 52 cartes aux joueurs (la bataille se joue généralement à deux) qui les rassemblent face cachée en paquet devant eux.
-              Chacun tire la carte du dessus de son paquet et la pose face visible sur la table.
-              Celui qui a la carte la plus forte ramasse les autres cartes.
-              L'as est la plus forte carte, puis roi, dame, valet, 10, etc.
-              Lorsque deux joueurs posent en même temps deux cartes de même valeur il y a "bataille". Lorsqu'il y a "bataille" les joueurs tirent la carte suivante et la posent, face cachée, sur la carte précédente. Puis, ils tirent une deuxième carte qu'ils posent cette fois-ci face découverte et c'est cette dernière qui départagera les joueurs. Celui qui la valeur la plus forte, l'importe.
-              Le gagnant est celui qui remporte toutes les cartes du paquet.
+        <div className={showRules ? "App-home" : "App-home-norules"}>
+          <h1 className="App-home-header" onClick={showHome}>
+              La bataille
+          </h1>
+          {isGameStarted && (
+          <div className="App-home-options">
+            
+              <div className="App-home-options-showrules">
+                <button
+                  className="App-home-options-showrules-button"
+                  onClick={showRulesAgain}
+                >
+                  Voir / Masquer les règles
+                </button>
+              </div>
+              <div className="App-home-options-startnew">
+              <button
+                className="App-home-options-startnew-button"
+                onClick={showHome}
+              >
+                Nouvelle partie
+              </button>
             </div>
+            
           </div>
-          <button onClick={startGame} className="App-home-button">Jouer</button>
+          )}
+          {showRules && (
+            <div className="App-home-rules">
+              <div className="App-home-rules-header">
+                Règles du jeu
+              </div>
+              <div className="App-home-rules-desc">
+                <p className="App-home-rules-desc-text">
+                  On distribue les 52 cartes aux joueurs (la bataille se joue généralement à deux) qui les rassemblent face cachée en paquet devant eux.
+                </p>
+                <p className="App-home-rules-desc-text">
+                  Chacun tire la carte du dessus de son paquet et la pose face visible sur la table.
+                </p>
+                  Celui qui a la carte la plus forte ramasse les autres cartes. L'as est la plus forte carte, puis roi, dame, valet, 10, etc.
+                <p className="App-home-rules-desc-text">
+                  Lorsque deux joueurs posent deux cartes de même valeur, il y a "bataille". Les joueurs tirent la carte suivante et la posent, face cachée, sur la carte précédente.
+                </p>
+                <p className="App-home-rules-desc-text">
+                  Puis, ils tirent une deuxième carte qu'ils posent cette fois-ci face découverte et c'est cette dernière qui départagera les joueurs. Celui qui la valeur la plus forte, l'emporte.
+                </p>
+                <p className="App-home-rules-desc-text">
+                  Le gagnant est celui qui remporte toutes les cartes du paquet.
+                </p>
+              </div>
+            </div>
+          )}
+          
+          {!isGameStarted && (
+            <button onClick={startGame} className="App-home-button">&gt;&gt; Jouer &lt;&lt; </button>
+          )}
         </div>
-      )}
+      
       {isGameStarted && (
         <div className="App-area">
         <div className="App-area-player1">
@@ -241,10 +295,10 @@ function App() {
             <div className="App-area-player1-game-deck">
               <div className="App-area-player1-game-deck-button">
                 <button
-                    className="App-area-player1-game-deck-button-draw"
-                    disabled={waitPlayer1 ? true : false}
-                    onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
-                    aria-label="start-game"
+                  className="App-area-player1-game-deck-button-draw"
+                  disabled={waitPlayer1 ? true : false}
+                  onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
+                  aria-label="start-game"
                 >
                 </button>
               </div>
@@ -265,38 +319,43 @@ function App() {
               ))}
             </div>
           </div>
-          
         </div>
         <div className="App-area-player2">
-          <div className={isBattlePlayer2 ? "App-area-player2-deck-draw" : "App-area-player2-play"}>
-            {drawCardDeckPlayer2.map((c) => (
-              <img
-                key={c.code}
-                src={c.image}
-                alt={c.code}
-                className={isBattlePlayer2 ? "hidden" : "App-area-player1-play-img"}
-              />
-            ))}
+          <div className="App-area-player2-name">Player 2</div>
+          <div className="App-area-player2-game">
+            <div className={isBattlePlayer2 ? "App-area-player2-game-deck-button-draw" : "App-area-player2-game-play"}>
+              {drawCardDeckPlayer2.map((c) => (
+                <img
+                  key={c.code}
+                  src={c.image}
+                  alt={c.code}
+                  className={isBattlePlayer2 ? "hidden" : "App-area-player1-game-play-img"}
+                />
+              ))}
             </div>
-          <div className="App-area-player2-deck">
-            <div className="App-area-player2-deck-name">Player 2</div>
-            <button
-              className="App-area-player2-deck-draw"
-              disabled={waitPlayer2 ? true : false}
-              onClick={startBattlePlayer2 ? drawBattleCardPlayer2 : drawCardPlayer2}
-              aria-label="start-game"
-            >
-            </button>
-            {deckId && (
-              <div className="App-area-player2-deck-count">
-                Cartes restantes : <em>{listPlayer2}</em>
+            <div className="App-area-player2-game-deck">
+              <div className="App-area-player2-game-deck-button">
+                <button
+                  className="App-area-player2-game-deck-button-draw"
+                  disabled={waitPlayer2 ? true : false}
+                  onClick={startBattlePlayer2 ? drawBattleCardPlayer2 : drawCardPlayer2}
+                  aria-label="start-game"
+                >
+                </button>
+              </div>
+              {deckId && (
+                <div className="App-area-player2-game-deck-count">
+                  Cartes restantes : <em>{listPlayer2}</em>
+                </div>
+              )}
             </div>
-            )}
           </div>
         </div>
       </div>
       )}
+      
     </div>
+    
   )
 }
 
