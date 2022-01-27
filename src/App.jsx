@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import './App.scss';
+import drawAudio from '../draw.mp3';
+import battleAudio from '../battle.mp3';
 
 function App() {
   const [deckId, setDeckId] = useState();
@@ -21,6 +23,9 @@ function App() {
 
   const pilePlayer1 = "pilePlayer1";
   const pilePlayer2 = "pilePlayer2";
+
+  const drawSound = new Audio(drawAudio);
+  const battleSound = new Audio(battleAudio);
 
   const startGame = async () => {
     setIsGameStarted(true);
@@ -74,6 +79,7 @@ function App() {
     }
     fetchDataDrawCardPlayer1();
     setIsBattlePlayer1(false);
+    drawSound.play();
   };
 
   // Draw a card from deck player 2
@@ -86,6 +92,7 @@ function App() {
     }
     fetchDataDrawCardPlayer2();
     setIsBattlePlayer2(false);
+    drawSound.play();
   };
 
   // Draw a card from deck player 1 when battle
@@ -104,6 +111,7 @@ function App() {
     fetchDataDrawBattleCardPlayer1();
     setWaitPlayer1(false);
     setStartBattlePlayer1(false);
+    drawSound.play();
   };
 
   // Draw a card from deck player 2 when battle
@@ -123,17 +131,27 @@ function App() {
     fetchDataDrawBattleCardPlayer2();
     setWaitPlayer2(false);
     setStartBattlePlayer2(false);
+    drawSound.play();
   };
 
+  const onBattle = () => {
+    battleSound.play();
+    setBattle(true);
+    setTimeout(() => {
+      setBattle(false)
+    }, 750);
+  };
   
   if (waitPlayer1 && waitPlayer2) {
     setWaitPlayer1(false);
     setWaitPlayer2(false);
     if (listPlayer1 === 0) {
       alert('Player 2 a gagné !!!');
+      setWaitPlayer1(true);
     }
     if (listPlayer2 === 0) {
       alert('Player 1 a gagné !!!');
+      setWaitPlayer2(true);
     }
     if (drawCardDeckPlayer1[0].value === "ACE") {
       drawCardDeckPlayer1[0].value = "14";
@@ -206,6 +224,7 @@ function App() {
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
     }  else if (Number(drawCardDeckPlayer1[0].value) === Number(drawCardDeckPlayer2[0].value)) {
+      onBattle();
       setStartBattlePlayer1(true);
       setStartBattlePlayer2(true);
       
@@ -227,14 +246,14 @@ function App() {
     setDrawCardDeckPlayer1([]);
     setDrawCardDeckPlayer2([]);
     setShowRules(true);
+    setDeckBattlePlayer1([]);
+    setDeckBattlePlayer2([]);
+    setIsBattlePlayer1(false);
+    setIsBattlePlayer2(false);
   }
 
-  const onBattle = () => {
-    setBattle(true);
-    setTimeout(() => {
-      setBattle(false)
-    }, 750);
-  };
+  
+
 
   return (
     <div className="App">
