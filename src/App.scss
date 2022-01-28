@@ -117,6 +117,19 @@
         &-deck {
 
           &-button {
+            position: relative;
+
+            &-back {
+              width: 226px;
+              height: 314px;
+              border: 1px solid lightgoldenrodyellow;
+              border-radius: 15px;
+              background-image: url("../back_card.jpg");
+              background-size: contain;
+              background-position: center;
+              position: absolute;
+              z-index: 0;
+            }
 
             &-draw {
               width: 226px;
@@ -126,7 +139,9 @@
               background-image: url("../back_card.jpg");
               background-size: contain;
               background-position: center;
-
+              position: relative;
+              z-index: 1;
+              
               &:hover {
                 cursor: pointer;
               }
@@ -134,14 +149,35 @@
           }
 
           &-count {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 5em;
             text-align: center;
             padding-top: 0.5em;
+
+            &-text {
+              margin: 0;
+            }
           }
         }
 
         &-play {
           width: 226px;
           height: 314px;
+          transform: translateX(-180px) rotateY(90deg);
+          transition: 0.2s;
+          
+          
+          // position: absolute;
+          // left: 180px;
+
+          &-img {
+            
+          //   transform: rotateY(90deg);
+
+          }
         }
       }
     }
@@ -220,8 +256,17 @@
           }
 
           &-count {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            height: 5em;
             text-align: center;
             padding-top: 0.5em;
+
+            &-text {
+              margin: 0;
+            }
           }
         }
       }
@@ -234,8 +279,13 @@
   width: 0;
 }
 
-em {
+.em {
   font-weight: bold;
+}
+
+.emWin {
+  font-weight: bold;
+  zoom: 3;
 }
 
 @-webkit-keyframes circle {
@@ -263,4 +313,15 @@ em {
 		height: 200%;
 		opacity: 0;
 	}
+}
+
+.activeBack {
+  transform: translateX(180px) rotateY(90deg);
+  transition: 0.2s;
+}
+
+.activeFront {
+  transform: translateX(0px) rotateY(0deg);
+  transition: 0.2s;
+  transition-delay: 0.2s;
 }

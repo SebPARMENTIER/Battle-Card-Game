@@ -20,6 +20,9 @@ function App() {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [showRules, setShowRules] = useState(true);
   const [battle, setBattle] = useState(false);
+  const [flipCard, setFlipCard] = useState(false);
+  const [roundWinnerPlayer1, setRoundWinnerPlayer1] = useState(false);
+  const [roundWinnerPlayer2, setRoundWinnerPlayer2] = useState(false);
 
   const pilePlayer1 = "pilePlayer1";
   const pilePlayer2 = "pilePlayer2";
@@ -71,6 +74,7 @@ function App() {
   
   // Draw a card from deck player 1
   const drawCardPlayer1 = () => {
+    setDrawCardDeckPlayer1([]);
     const fetchDataDrawCardPlayer1 = async () => {
       const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/draw/bottom/?count=1`);
       const data = await res.json();
@@ -79,6 +83,7 @@ function App() {
     }
     fetchDataDrawCardPlayer1();
     setIsBattlePlayer1(false);
+    setFlipCard(true);
     drawSound.play();
   };
 
@@ -142,6 +147,20 @@ function App() {
     }, 750);
   };
   
+  const onRoundWinPlayer1 = () => {
+    setRoundWinnerPlayer1(true);
+    setTimeout(() => {
+      setRoundWinnerPlayer1(false)
+    }, 750);
+  };
+
+  const onRoundWinPlayer2 = () => {
+    setRoundWinnerPlayer2(true);
+    setTimeout(() => {
+      setRoundWinnerPlayer2(false)
+    }, 750);
+  };
+
   if (waitPlayer1 && waitPlayer2) {
     setWaitPlayer1(false);
     setWaitPlayer2(false);
@@ -200,6 +219,10 @@ function App() {
       setWaitPlayer2(false);
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
+      setTimeout(() => {
+        setFlipCard(false);
+      }, 750);
+      onRoundWinPlayer1();
     } else if (Number(drawCardDeckPlayer1[0].value) < Number(drawCardDeckPlayer2[0].value)) {
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
@@ -223,7 +246,14 @@ function App() {
       setWaitPlayer2(false);
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
+      setTimeout(() => {
+        setFlipCard(false);
+      }, 750);
+      onRoundWinPlayer2();
     }  else if (Number(drawCardDeckPlayer1[0].value) === Number(drawCardDeckPlayer2[0].value)) {
+      setTimeout(() => {
+        setFlipCard(false)
+      }, 750);
       onBattle();
       setStartBattlePlayer1(true);
       setStartBattlePlayer2(true);
@@ -252,7 +282,7 @@ function App() {
     setIsBattlePlayer2(false);
   }
 
-  
+  console.log("drawCardDeckPlayer1", drawCardDeckPlayer1);
 
 
   return (
@@ -323,8 +353,9 @@ function App() {
             <div className="App-area-player1-game">
               <div className="App-area-player1-game-deck">
                 <div className="App-area-player1-game-deck-button">
+                  <div className="App-area-player1-game-deck-button-back"></div>
                   <button
-                    className="App-area-player1-game-deck-button-draw"
+                    className={flipCard ? "App-area-player1-game-deck-button-draw activeBack" : "App-area-player1-game-deck-button-draw"}
                     disabled={waitPlayer1 ? true : false}
                     onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
                     aria-label="start-game"
@@ -333,11 +364,14 @@ function App() {
                 </div>
                 {deckId && (
                   <div className="App-area-player1-game-deck-count">
-                    Cartes restantes : <em>{listPlayer1}</em>
+                    <p className="App-area-player1-game-deck-count-text">
+                      Cartes restantes
+                    </p>
+                    <em className={roundWinnerPlayer1 ? "emWin" : "em"}>{listPlayer1}</em>
                   </div>
                 )}
               </div>
-              <div className={isBattlePlayer1 ? "App-area-player1-game-deck-button-draw" : "App-area-player1-game-play"}>
+              <div className={isBattlePlayer1 ? "App-area-player1-game-deck-button-draw" : (flipCard ? "App-area-player1-game-play activeFront" : "App-area-player1-game-play")}>
                 {drawCardDeckPlayer1.map((c) => (
                   <img
                     key={c.code}
@@ -359,7 +393,7 @@ function App() {
                     key={c.code}
                     src={c.image}
                     alt={c.code}
-                    className={isBattlePlayer2 ? "hidden" : "App-area-player1-game-play-img"}
+                    className={isBattlePlayer2 ? "hidden" : "App-area-player2-game-play-img"}
                   />
                 ))}
               </div>
@@ -375,7 +409,10 @@ function App() {
                 </div>
                 {deckId && (
                   <div className="App-area-player2-game-deck-count">
-                    Cartes restantes : <em>{listPlayer2}</em>
+                    <p className="App-area-player2-game-deck-count-text">
+                      Cartes restantes
+                    </p>
+                    <em className={roundWinnerPlayer2 ? "emWin" : "em"}>{listPlayer2}</em>
                   </div>
                 )}
               </div>
