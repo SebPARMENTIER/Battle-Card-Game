@@ -26,7 +26,8 @@ function App() {
   const [roundWinnerPlayer2, setRoundWinnerPlayer2] = useState(false);
   const [disapearCardPlayer1, setDisapearCardPlayer1] = useState(false);
   const [disapearCardPlayer2, setDisapearCardPlayer2] = useState(false);
-  const [endOfDeck, setEndOfDeck] = useState(false);
+  const [endOfDeckPlayer1, setEndOfDeckPlayer1] = useState(false);
+  const [endOfDeckPlayer2, setEndOfDeckPlayer2] = useState(false);
 
   const pilePlayer1 = "pilePlayer1";
   const pilePlayer2 = "pilePlayer2";
@@ -90,7 +91,7 @@ function App() {
     setFlipCardPlayer1(true);
     drawSound.play();
     if (listPlayer1 === 1) {
-      setEndOfDeck(true);
+      setEndOfDeckPlayer1(true);
     }
   };
 
@@ -108,7 +109,7 @@ function App() {
     setFlipCardPlayer2(true);
     drawSound.play();
     if (listPlayer2 === 1) {
-      setEndOfDeck(true);
+      setEndOfDeckPlayer2(true);
     }
   };
 
@@ -384,7 +385,7 @@ function App() {
             <div className="App-area-player1-game">
               <div className="App-area-player1-game-deck">
                 <div className="App-area-player1-game-deck-button">
-                  <div className={endOfDeck ? "App-area-player1-game-deck-button-back-empty" : "App-area-player1-game-deck-button-back"}></div>
+                  <div className={endOfDeckPlayer1 ? "App-area-player1-game-deck-button-back-empty" : "App-area-player1-game-deck-button-back"}></div>
                   <button
                     className={flipCardPlayer1 ? "App-area-player1-game-deck-button-draw activeBackPlayer1" : "App-area-player1-game-deck-button-draw"}
                     disabled={waitPlayer1 ? true : false}
@@ -430,7 +431,7 @@ function App() {
               </div>
               <div className="App-area-player2-game-deck">
                 <div className="App-area-player2-game-deck-button">
-                <div className={endOfDeck ? "App-area-player2-game-deck-button-back-empty" : "App-area-player2-game-deck-button-back"}></div>
+                <div className={endOfDeckPlayer2 ? "App-area-player2-game-deck-button-back-empty" : "App-area-player2-game-deck-button-back"}></div>
                   <button
                     className={flipCardPlayer2 ? "App-area-player2-game-deck-button-draw activeBackPlayer2" : "App-area-player2-game-deck-button-draw"}
                     disabled={waitPlayer2 ? true : false}
