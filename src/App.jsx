@@ -90,7 +90,7 @@ function App() {
     setIsBattlePlayer1(false);
     setFlipCardPlayer1(true);
     drawSound.play();
-    if (listPlayer1 === 1) {
+    if (listPlayer1 === 26) {
       setEndOfDeckPlayer1(true);
     }
   };
@@ -166,6 +166,8 @@ function App() {
       setDisapearCardPlayer2(true);
     }, 500);
     setTimeout(() => {
+      setEndOfDeckPlayer1(false);
+      setEndOfDeckPlayer2(false);
       setRoundWinnerPlayer1(true);
       setDrawCardDeckPlayer1([]);
       setDrawCardDeckPlayer2([]);
@@ -185,6 +187,8 @@ function App() {
       setDisapearCardPlayer2(true);
     }, 500);
     setTimeout(() => {
+      setEndOfDeckPlayer1(false);
+      setEndOfDeckPlayer2(false);
       setRoundWinnerPlayer2(true);
       setDrawCardDeckPlayer1([]);
       setDrawCardDeckPlayer2([]);
