@@ -133,6 +133,13 @@
               &-empty {
                 display: none;
               }
+
+              &-over {
+                width: 226px;
+                height: 314px;
+                border: none;
+                background-image: none;
+              }
             }
 
             &-draw {
@@ -214,7 +221,7 @@
     }
 
     &-gameOver {
-      width: 90%;
+      width: 95%;
       padding: 10em 0 10em;
       background-color: purple;
       text-align: center;
@@ -294,6 +301,13 @@
 
               &-empty {
                 display: none;
+              }
+
+              &-over {
+                width: 226px;
+                height: 314px;
+                border: none;
+                background-image: none;
               }
             }
 

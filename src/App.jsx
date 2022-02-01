@@ -136,6 +136,9 @@ function App() {
 
   // Draw a card from deck player 2 when battle
   const drawBattleCardPlayer2 = () => {
+    if (listPlayer1 === 0) {
+      setGameOverPlayer1(true);
+    };
     setIsBattlePlayer2(true);
     const fetchDataDrawBattleCardPlayer2 = async () => {
       const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/draw/bottom/?count=1`);
@@ -168,9 +171,12 @@ function App() {
       setDisapearCardPlayer2(true);
     }, 500);
     setTimeout(() => {
-      if (listPlayer1 > 0 || listPlayer2 > 0) {
+      if (listPlayer1 !== 0 || listPlayer2 !== 0) {
         setEndOfDeckPlayer1(false);
         setEndOfDeckPlayer2(false);
+      };
+      if (listPlayer2 === 1) {
+        setGameOverPlayer2(true);
       };
       setRoundWinnerPlayer1(true);
       setDrawCardDeckPlayer1([]);
@@ -182,9 +188,6 @@ function App() {
     }, 800);
     setTimeout(() => {
       setRoundWinnerPlayer1(false);
-      if (listPlayer2 === 0) {
-        setGameOverPlayer2(true);
-      };
     }, 1250);
   };
 
@@ -194,9 +197,12 @@ function App() {
       setDisapearCardPlayer2(true);
     }, 500);
     setTimeout(() => {
-      if (listPlayer2 > 0 || listPlayer1 > 0) {
+      if (listPlayer2 !== 0 || listPlayer1 !== 0) {
         setEndOfDeckPlayer1(false);
         setEndOfDeckPlayer2(false);
+      };
+      if (listPlayer1 === 1) {
+        setGameOverPlayer1(true);
       };
       setRoundWinnerPlayer2(true);
       setDrawCardDeckPlayer1([]);
@@ -208,9 +214,6 @@ function App() {
     }, 800);
     setTimeout(() => {
       setRoundWinnerPlayer2(false);
-      if (listPlayer1 === 0) {
-        setGameOverPlayer1(true);
-      };
     }, 1250);
   };
 
@@ -254,7 +257,7 @@ function App() {
       cardsWinBattle.map((card) => {
         card.forEach((c) => cardsWinBattleArray.push(c));
       });
-      console.log("cardsWinBattleArray", cardsWinBattleArray);
+      //console.log("cardsWinBattleArray", cardsWinBattleArray);
       const cardsWinBattleGoToDeck = cardsWinBattleArray.map((c) => c.code).join(',');
       const fetchDataReturnCardsToDeckPlayer1 = async () => {
         await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/add/?cards=${drawCardDeckPlayer1[0].code},${drawCardDeckPlayer2[0].code},${cardsWinBattleGoToDeck}`);
@@ -270,6 +273,7 @@ function App() {
       setDeckBattlePlayer2([]);
       onRoundWinPlayer1();
     } else if (Number(drawCardDeckPlayer1[0].value) < Number(drawCardDeckPlayer2[0].value)) {
+     
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
       const cardsWinBattle = deckBattlePlayer1.concat(deckBattlePlayer2);
@@ -278,7 +282,7 @@ function App() {
       cardsWinBattle.map((card) => {
         card.forEach((c) => cardsWinBattleArray.push(c));
       });
-      console.log("cardsWinBattleArray", cardsWinBattleArray);
+      //console.log("cardsWinBattleArray", cardsWinBattleArray);
       const cardsWinBattleGoToDeck = cardsWinBattleArray.map((c) => c.code).join(',');
       const fetchDataReturnCardsToDeckPlayer2 = async () => {
         await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/add/?cards=${drawCardDeckPlayer1[0].code},${drawCardDeckPlayer2[0].code},${cardsWinBattleGoToDeck}`);
@@ -294,18 +298,22 @@ function App() {
       setDeckBattlePlayer2([]);
       onRoundWinPlayer2();
     }  else if (Number(drawCardDeckPlayer1[0].value) === Number(drawCardDeckPlayer2[0].value)) {
-      setTimeout(() => {
-        setFlipCardPlayer1(false);
-        setFlipCardPlayer2(false);
-      }, 750);
-      onBattle();
-      setStartBattlePlayer1(true);
-      setStartBattlePlayer2(true);
-      
-      setDeckBattlePlayer1([...deckBattlePlayer1, drawCardDeckPlayer1]);
-      setDeckBattlePlayer2([...deckBattlePlayer2, drawCardDeckPlayer2]);
-
-      console.log("battle");
+      if (listPlayer1 === 1) {
+        setGameOverPlayer1(true);
+      } else {
+        setTimeout(() => {
+          setFlipCardPlayer1(false);
+          setFlipCardPlayer2(false);
+        }, 750);
+        onBattle();
+        setStartBattlePlayer1(true);
+        setStartBattlePlayer2(true);
+        
+        setDeckBattlePlayer1([...deckBattlePlayer1, drawCardDeckPlayer1]);
+        setDeckBattlePlayer2([...deckBattlePlayer2, drawCardDeckPlayer2]);
+  
+        console.log("battle");
+      }
     }
     //console.log("deck battle P1 et P2", deckBattlePlayer1, deckBattlePlayer2);
   }
@@ -401,7 +409,7 @@ function App() {
                 <div className="App-area-player1-game-deck-button">
                   <div className={endOfDeckPlayer1 ? "App-area-player1-game-deck-button-back-empty" : "App-area-player1-game-deck-button-back"}></div>
                   <button
-                    className={flipCardPlayer1 ? "App-area-player1-game-deck-button-draw activeBackPlayer1" : "App-area-player1-game-deck-button-draw"}
+                    className={flipCardPlayer1 ? "App-area-player1-game-deck-button-draw activeBackPlayer1" : (gameOverPlayer1 ? "App-area-player1-game-deck-button-back-over" : "App-area-player1-game-deck-button-draw")}
                     disabled={waitPlayer1 ? true : false}
                     onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
                     aria-label="start-game"
@@ -473,7 +481,7 @@ function App() {
                 <div className="App-area-player2-game-deck-button">
                 <div className={endOfDeckPlayer2 ? "App-area-player2-game-deck-button-back-empty" : "App-area-player2-game-deck-button-back"}></div>
                   <button
-                    className={flipCardPlayer2 ? "App-area-player2-game-deck-button-draw activeBackPlayer2" : "App-area-player2-game-deck-button-draw"}
+                    className={flipCardPlayer2 ? "App-area-player2-game-deck-button-draw activeBackPlayer2" : (gameOverPlayer2 ? "App-area-player2-game-deck-button-back-over" : "App-area-player2-game-deck-button-draw")}
                     disabled={waitPlayer2 ? true : false}
                     onClick={startBattlePlayer2 ? drawBattleCardPlayer2 : drawCardPlayer2}
                     aria-label="start-game"
