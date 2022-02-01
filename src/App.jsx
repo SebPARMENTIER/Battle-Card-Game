@@ -28,6 +28,8 @@ function App() {
   const [disapearCardPlayer2, setDisapearCardPlayer2] = useState(false);
   const [endOfDeckPlayer1, setEndOfDeckPlayer1] = useState(false);
   const [endOfDeckPlayer2, setEndOfDeckPlayer2] = useState(false);
+  const [gameOverPlayer1, setGameOverPlayer1] = useState(false);
+  const [gameOverPlayer2, setGameOverPlayer2] = useState(false);
 
   const pilePlayer1 = "pilePlayer1";
   const pilePlayer2 = "pilePlayer2";
@@ -90,7 +92,7 @@ function App() {
     setIsBattlePlayer1(false);
     setFlipCardPlayer1(true);
     drawSound.play();
-    if (listPlayer1 === 26) {
+    if (listPlayer1 === 1) {
       setEndOfDeckPlayer1(true);
     }
   };
@@ -166,8 +168,10 @@ function App() {
       setDisapearCardPlayer2(true);
     }, 500);
     setTimeout(() => {
-      setEndOfDeckPlayer1(false);
-      setEndOfDeckPlayer2(false);
+      if (listPlayer1 > 0 || listPlayer2 > 0) {
+        setEndOfDeckPlayer1(false);
+        setEndOfDeckPlayer2(false);
+      };
       setRoundWinnerPlayer1(true);
       setDrawCardDeckPlayer1([]);
       setDrawCardDeckPlayer2([]);
@@ -178,6 +182,9 @@ function App() {
     }, 800);
     setTimeout(() => {
       setRoundWinnerPlayer1(false);
+      if (listPlayer2 === 0) {
+        setGameOverPlayer2(true);
+      };
     }, 1250);
   };
 
@@ -187,8 +194,10 @@ function App() {
       setDisapearCardPlayer2(true);
     }, 500);
     setTimeout(() => {
-      setEndOfDeckPlayer1(false);
-      setEndOfDeckPlayer2(false);
+      if (listPlayer2 > 0 || listPlayer1 > 0) {
+        setEndOfDeckPlayer1(false);
+        setEndOfDeckPlayer2(false);
+      };
       setRoundWinnerPlayer2(true);
       setDrawCardDeckPlayer1([]);
       setDrawCardDeckPlayer2([]);
@@ -199,16 +208,15 @@ function App() {
     }, 800);
     setTimeout(() => {
       setRoundWinnerPlayer2(false);
+      if (listPlayer1 === 0) {
+        setGameOverPlayer1(true);
+      };
     }, 1250);
   };
 
   if (waitPlayer1 && waitPlayer2) {
     setWaitPlayer1(false);
     setWaitPlayer2(false);
-    if (listPlayer1 === 0) {
-      alert('Player 2 a gagné !!!');
-      setWaitPlayer1(true);
-    }
     if (listPlayer2 === 0) {
       alert('Player 1 a gagné !!!');
       setWaitPlayer2(true);
@@ -246,7 +254,7 @@ function App() {
       cardsWinBattle.map((card) => {
         card.forEach((c) => cardsWinBattleArray.push(c));
       });
-      //console.log("cardsWinBattleArray", cardsWinBattleArray);
+      console.log("cardsWinBattleArray", cardsWinBattleArray);
       const cardsWinBattleGoToDeck = cardsWinBattleArray.map((c) => c.code).join(',');
       const fetchDataReturnCardsToDeckPlayer1 = async () => {
         await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/add/?cards=${drawCardDeckPlayer1[0].code},${drawCardDeckPlayer2[0].code},${cardsWinBattleGoToDeck}`);
@@ -270,7 +278,7 @@ function App() {
       cardsWinBattle.map((card) => {
         card.forEach((c) => cardsWinBattleArray.push(c));
       });
-      //console.log("cardsWinBattleArray", cardsWinBattleArray);
+      console.log("cardsWinBattleArray", cardsWinBattleArray);
       const cardsWinBattleGoToDeck = cardsWinBattleArray.map((c) => c.code).join(',');
       const fetchDataReturnCardsToDeckPlayer2 = async () => {
         await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/add/?cards=${drawCardDeckPlayer1[0].code},${drawCardDeckPlayer2[0].code},${cardsWinBattleGoToDeck}`);
@@ -316,6 +324,8 @@ function App() {
     setDeckBattlePlayer2([]);
     setIsBattlePlayer1(false);
     setIsBattlePlayer2(false);
+    setGameOverPlayer1(false);
+    setGameOverPlayer2(false);
   }
 
   //console.log("drawCardDeckPlayer1", drawCardDeckPlayer1);
@@ -420,6 +430,32 @@ function App() {
             </div>
           </div>
           <div className={battle ? "App-area-battle" : "hidden"}>BATAILLE</div>
+          {gameOverPlayer1 && (
+            <div className="App-area-gameOver">
+              <div className="App-area-gameOver-text">
+                VICTOIRE PLAYER 2 !!!
+              </div>
+              <button
+                className="App-area-gameOver-button"
+                onClick={showHome}
+              >
+                Nouvelle partie
+              </button>
+            </div>
+          )}
+          {gameOverPlayer2 && (
+            <div className="App-area-gameOver">
+              <div className="App-area-gameOver-text">
+                VICTOIRE PLAYER 1 !!!
+              </div>
+              <button
+                className="App-area-gameOver-button"
+                onClick={showHome}
+              >
+                Nouvelle partie
+              </button>
+            </div>
+          )}
           <div className="App-area-player2">
             <div className="App-area-player2-name">Player 2</div>
             <div className="App-area-player2-game">
