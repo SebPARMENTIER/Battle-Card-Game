@@ -1,5 +1,6 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './App.scss';
+import cards from './assets/data/cards'
 import drawAudio from '../draw.mp3';
 import battleAudio from '../battle.mp3';
 
@@ -37,98 +38,92 @@ function App() {
   const drawSound = new Audio(drawAudio);
   const battleSound = new Audio(battleAudio);
 
-  const startGame = async () => {
+  const [deck, setDeck] = useState(cards);
+  const [deckPlayer1, setDeckPlayer1] = useState(cards.slice(0, 26));
+  const [deckPlayer2, setDeckPlayer2] = useState(cards.slice(26, 52));
+  const [deckPlayer1Remaining, setDeckPlayer1Remaining] = useState(deckPlayer1.length);
+  const [deckPlayer2Remaining, setDeckPlayer2Remaining] = useState(deckPlayer2.length);
+  const [deckOnGamePlayer1, setDeckOnGamePlayer1] = useState([]);
+  const [deckOnGamePlayer2, setDeckOnGamePlayer2] = useState([]);
+
+  
+  // Shuffle cards array
+  const fisherYatesShuffle = (array) => {
+    for (let i = array.length-1; i > 0; i--) {
+      let j = Math.floor( Math.random() * (i + 1)); //random index
+      [array[i], array[j]] = [array[j], array[i]]; // swap
+    };
+  }
+
+  const startGame = () => {
     setIsGameStarted(true);
     setShowRules(false);
-
-    // Get a deck with 52 cards
-    const res = await fetch("http://deckofcardsapi.com/api/deck/new/shuffle/?deck_count=1");
-    const data = await res.json();
-    setDeckId(data.deck_id);
-
-    // FOR PLAYER 1
-    // Draw 26 cards for player 1
-    const res1 = await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=26`);
-    const data1 = await res1.json();
-  
-    // Create a string with cards to create a pile for player 1
-    const deckPlayer1 = data1.cards.map((c) => c.code).join(',');
-
-    // Create a pile for player 1 and add 26 cards to the pile
-    await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${pilePlayer1}/add/?cards=${deckPlayer1}`);
-
-    // Create a list for player 1
-    const res2 = await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${pilePlayer1}/list`);
-      const data2 = await res2.json();
-      setListPlayer1(data2.piles.pilePlayer1.remaining);
-
-    // FOR PLAYER 2
-    // Draw 26 cards for player 2
-    const res3 = await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/draw/?count=26`);
-    const data3 = await res3.json();
-
-    // Create a string with cards to create a pile for player 2
-    const deckPlayer2 = data3.cards.map((c) => c.code).join(',');
-
-    // Create a pile for player 2 and add 26 cards to the pile
-    await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${pilePlayer2}/add/?cards=${deckPlayer2}`);
-
-    // Create a list for player 2
-    const res4 = await fetch(`http://deckofcardsapi.com/api/deck/${data.deck_id}/pile/${pilePlayer2}/list`);
-      const data4 = await res4.json();
-      setListPlayer2(data4.piles.pilePlayer2.remaining);
+    fisherYatesShuffle(cards);
+    setDeckPlayer1(deck.slice(0, 26));
+    setDeckPlayer2(deck.slice(26, 52));
   };
+
+  useEffect(() => {
+    setDeckPlayer1Remaining(deckPlayer1.length);
+    setDeckPlayer2Remaining(deckPlayer2.length);
+  }, [deckPlayer1Remaining]);
+
+  useEffect(() => {
+    setDeckPlayer1Remaining(deckPlayer1.length);
+    setDeckPlayer2Remaining(deckPlayer2.length);
+  }, [deckPlayer2Remaining]);
+
+ 
+  console.log('deck', deck);
+  console.log('deck1', deckPlayer1);
+  console.log('deck2', deckPlayer2);
+
   
+
   // Draw a card from deck player 1
   const drawCardPlayer1 = () => {
     setDisapearCardPlayer1(false);
-    const fetchDataDrawCardPlayer1 = async () => {
-      const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/draw/bottom/?count=1`);
-      const data = await res.json();
-      setDrawCardDeckPlayer1(data.cards);
-      setWaitPlayer1(true);
-    }
-    fetchDataDrawCardPlayer1();
+    setDrawCardDeckPlayer1([deckPlayer1[0]]);
+    setDeckOnGamePlayer1(deckPlayer1.splice(0, 1));
+    setDeckPlayer1Remaining(deckPlayer1.length);
+    setWaitPlayer1(true);
     setIsBattlePlayer1(false);
     setFlipCardPlayer1(true);
     drawSound.play();
-    if (listPlayer1 === 1) {
+    if (deckPlayer1Remaining === 1) {
       setEndOfDeckPlayer1(true);
     }
+    console.log('newDeck1', deckPlayer1);
   };
+    console.log('deckOnGame1', deckOnGamePlayer1);
+    console.log('deckOnGame2', deckOnGamePlayer2);
+
+
 
   // Draw a card from deck player 2
   const drawCardPlayer2 = () => {
     setDisapearCardPlayer2(false);
-    const fetchDataDrawCardPlayer2 = async () => {
-      const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/draw/bottom/?count=1`);
-      const data = await res.json();
-      setDrawCardDeckPlayer2(data.cards);
-      setWaitPlayer2(true);
-    }
-    fetchDataDrawCardPlayer2();
+    setDrawCardDeckPlayer2([deckPlayer2[0]]);
+    setDeckOnGamePlayer2(deckPlayer2.splice(0, 1));
+    setDeckPlayer2Remaining(deckPlayer2.length);
+    setWaitPlayer2(true);
     setIsBattlePlayer2(false);
     setFlipCardPlayer2(true);
     drawSound.play();
-    if (listPlayer2 === 1) {
+    if (deckPlayer2Remaining === 1) {
       setEndOfDeckPlayer2(true);
     }
   };
 
   // Draw a card from deck player 1 when battle
   const drawBattleCardPlayer1 = () => {
+    if (deckPlayer2Remaining === 0) {
+      setGameOverPlayer2(true);
+    };
     setIsBattlePlayer1(true);
-    const fetchDataDrawBattleCardPlayer1 = async () => {
-      const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/draw/bottom/?count=1`);
-      const data = await res.json();
-      setDeckBattlePlayer1([...deckBattlePlayer1, data.cards]);
-      const res1 = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/list`);
-      const data1 = await res1.json();
-      setListPlayer1(data1.piles.pilePlayer1.remaining);
-      setListPlayer2(data1.piles.pilePlayer2.remaining);
-      //console.log("Carte cachée P1", deckBattlePlayer1);
-    }
-    fetchDataDrawBattleCardPlayer1();
+    setDrawCardDeckPlayer1([deckPlayer1[0]]);
+    setDeckOnGamePlayer1(deckPlayer1.splice(0, 1));
+    setDeckPlayer1Remaining(deckPlayer1.length);
     setWaitPlayer1(false);
     setStartBattlePlayer1(false);
     drawSound.play();
@@ -136,22 +131,13 @@ function App() {
 
   // Draw a card from deck player 2 when battle
   const drawBattleCardPlayer2 = () => {
-    if (listPlayer1 === 0) {
+    if (deckPlayer1Remaining === 0) {
       setGameOverPlayer1(true);
     };
     setIsBattlePlayer2(true);
-    const fetchDataDrawBattleCardPlayer2 = async () => {
-      const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/draw/bottom/?count=1`);
-      const data = await res.json();
-      setDeckBattlePlayer2([...deckBattlePlayer2, data.cards]);
-      const res1 = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/list`);
-      const data1 = await res1.json();
-      setListPlayer1(data1.piles.pilePlayer1.remaining);
-      setListPlayer2(data1.piles.pilePlayer2.remaining);
-
-      //console.log("Carte cachée P2", deckBattlePlayer2);
-    }
-    fetchDataDrawBattleCardPlayer2();
+    setDrawCardDeckPlayer2([deckPlayer2[0]]);
+    setDeckOnGamePlayer2(deckPlayer2.splice(0, 1));
+    setDeckPlayer2Remaining(deckPlayer2.length);
     setWaitPlayer2(false);
     setStartBattlePlayer2(false);
     drawSound.play();
@@ -171,11 +157,11 @@ function App() {
       setDisapearCardPlayer2(true);
     }, 500);
     setTimeout(() => {
-      if (listPlayer1 !== 0 || listPlayer2 !== 0) {
+      if (deckPlayer1Remaining !== 0 || deckPlayer2Remaining !== 0) {
         setEndOfDeckPlayer1(false);
         setEndOfDeckPlayer2(false);
       };
-      if (listPlayer2 === 1) {
+      if (deckPlayer2Remaining === 1) {
         setGameOverPlayer2(true);
       };
       setRoundWinnerPlayer1(true);
@@ -197,11 +183,11 @@ function App() {
       setDisapearCardPlayer2(true);
     }, 500);
     setTimeout(() => {
-      if (listPlayer2 !== 0 || listPlayer1 !== 0) {
+      if (deckPlayer2Remaining !== 0 || deckPlayer1Remaining !== 0) {
         setEndOfDeckPlayer1(false);
         setEndOfDeckPlayer2(false);
       };
-      if (listPlayer1 === 1) {
+      if (deckPlayer1Remaining === 1) {
         setGameOverPlayer1(true);
       };
       setRoundWinnerPlayer2(true);
@@ -220,85 +206,30 @@ function App() {
   if (waitPlayer1 && waitPlayer2) {
     setWaitPlayer1(false);
     setWaitPlayer2(false);
-    if (listPlayer2 === 0) {
-      alert('Player 1 a gagné !!!');
-      setWaitPlayer2(true);
-    }
-    if (drawCardDeckPlayer1[0].value === "ACE") {
-      drawCardDeckPlayer1[0].value = "14";
-    }
-    if (drawCardDeckPlayer2[0].value === "ACE") {
-      drawCardDeckPlayer2[0].value = "14";
-    }
-    if (drawCardDeckPlayer1[0].value === "KING") {
-      drawCardDeckPlayer1[0].value = "13";
-    }
-    if (drawCardDeckPlayer2[0].value === "KING") {
-      drawCardDeckPlayer2[0].value = "13";
-    }
-    if (drawCardDeckPlayer1[0].value === "QUEEN") {
-      drawCardDeckPlayer1[0].value = "12";
-    }
-    if (drawCardDeckPlayer2[0].value === "QUEEN") {
-      drawCardDeckPlayer2[0].value = "12";
-    }
-    if (drawCardDeckPlayer1[0].value === "JACK") {
-      drawCardDeckPlayer1[0].value = "11";
-    }
-    if (drawCardDeckPlayer2[0].value === "JACK") {
-      drawCardDeckPlayer2[0].value = "11";
-    }
-    if (Number(drawCardDeckPlayer1[0].value) > Number(drawCardDeckPlayer2[0].value)) {
+    if (deckOnGamePlayer1[0].value > deckOnGamePlayer2[0].value) {
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
-      const cardsWinBattle = deckBattlePlayer1.concat(deckBattlePlayer2);
-      //console.log("concat", cardsWinBattle);
-      const cardsWinBattleArray = [];
-      cardsWinBattle.map((card) => {
-        card.forEach((c) => cardsWinBattleArray.push(c));
-      });
-      //console.log("cardsWinBattleArray", cardsWinBattleArray);
-      const cardsWinBattleGoToDeck = cardsWinBattleArray.map((c) => c.code).join(',');
-      const fetchDataReturnCardsToDeckPlayer1 = async () => {
-        await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/add/?cards=${drawCardDeckPlayer1[0].code},${drawCardDeckPlayer2[0].code},${cardsWinBattleGoToDeck}`);
-        const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer1}/list`);
-        const data = await res.json();
-        setListPlayer1(data.piles.pilePlayer1.remaining);
-        setListPlayer2(data.piles.pilePlayer2.remaining);
-      }
-      fetchDataReturnCardsToDeckPlayer1();
+      setDeckPlayer1([...deckPlayer1, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
       setWaitPlayer1(false);
       setWaitPlayer2(false);
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
+      setDeckOnGamePlayer1([]);
+      setDeckOnGamePlayer2([]);
       onRoundWinPlayer1();
-    } else if (Number(drawCardDeckPlayer1[0].value) < Number(drawCardDeckPlayer2[0].value)) {
-     
+    } else if (deckOnGamePlayer1[0].value < deckOnGamePlayer2[0].value) {
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
-      const cardsWinBattle = deckBattlePlayer1.concat(deckBattlePlayer2);
-      //console.log("concat", cardsWinBattle);
-      const cardsWinBattleArray = [];
-      cardsWinBattle.map((card) => {
-        card.forEach((c) => cardsWinBattleArray.push(c));
-      });
-      //console.log("cardsWinBattleArray", cardsWinBattleArray);
-      const cardsWinBattleGoToDeck = cardsWinBattleArray.map((c) => c.code).join(',');
-      const fetchDataReturnCardsToDeckPlayer2 = async () => {
-        await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/add/?cards=${drawCardDeckPlayer1[0].code},${drawCardDeckPlayer2[0].code},${cardsWinBattleGoToDeck}`);
-        const res = await fetch(`http://deckofcardsapi.com/api/deck/${deckId}/pile/${pilePlayer2}/list`);
-        const data = await res.json();
-        setListPlayer1(data.piles.pilePlayer1.remaining);
-        setListPlayer2(data.piles.pilePlayer2.remaining);
-      }
-      fetchDataReturnCardsToDeckPlayer2();
+      setDeckPlayer2([...deckPlayer2, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
+      setDeckOnGamePlayer1([]);
+      setDeckOnGamePlayer2([]);
       setWaitPlayer1(false);
       setWaitPlayer2(false);
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
       onRoundWinPlayer2();
-    }  else if (Number(drawCardDeckPlayer1[0].value) === Number(drawCardDeckPlayer2[0].value)) {
-      if (listPlayer1 === 1) {
+    }  else if (deckOnGamePlayer1[0].value === deckOnGamePlayer2[0].value) {
+      if (deckPlayer1Remaining === 1) {
         setGameOverPlayer1(true);
       } else {
         setTimeout(() => {
@@ -309,14 +240,15 @@ function App() {
         setStartBattlePlayer1(true);
         setStartBattlePlayer2(true);
         
-        setDeckBattlePlayer1([...deckBattlePlayer1, drawCardDeckPlayer1]);
-        setDeckBattlePlayer2([...deckBattlePlayer2, drawCardDeckPlayer2]);
+        // setDeckOnGamePlayer1([...deckOnGamePlayer1, drawCardDeckPlayer1]);
+        // setDeckOnGamePlayer2([...deckOnGamePlayer2, drawCardDeckPlayer2]);
   
         console.log("battle");
       }
     }
     //console.log("deck battle P1 et P2", deckBattlePlayer1, deckBattlePlayer2);
-  }
+  };
+  
     
   const showRulesAgain = () => {
     setShowRules(!showRules)
@@ -416,21 +348,21 @@ function App() {
                   >
                   </button>
                 </div>
-                {deckId && (
+                {deck && (
                   <div className="App-area-player1-game-deck-count">
                     <p className="App-area-player1-game-deck-count-text">
                       Cartes restantes
                     </p>
-                    <em className={roundWinnerPlayer1 ? "emWin" : "em"}>{listPlayer1}</em>
+                    <em className={roundWinnerPlayer1 ? "emWin" : "em"}>{deckPlayer1Remaining}</em>
                   </div>
                 )}
               </div>
               <div className={isBattlePlayer1 ? "App-area-player1-game-deck-button-draw" : (flipCardPlayer1 ? "App-area-player1-game-play activeFrontPlayer1" : "App-area-player1-game-play")}>
                 {drawCardDeckPlayer1.map((c) => (
                   <img
-                    key={c.code}
+                    key={c.id}
                     src={c.image}
-                    alt={c.code}
+                    alt={c.id}
                     className={isBattlePlayer1 ? "hidden" : (disapearCardPlayer1 ? "App-area-player1-game-play-img-disapear" : "App-area-player1-game-play-img")}
                   />
                 ))}
@@ -488,12 +420,12 @@ function App() {
                   >
                   </button>
                 </div>
-                {deckId && (
+                {deck && (
                   <div className="App-area-player2-game-deck-count">
                     <p className="App-area-player2-game-deck-count-text">
                       Cartes restantes
                     </p>
-                    <em className={roundWinnerPlayer2 ? "emWin" : "em"}>{listPlayer2}</em>
+                    <em className={roundWinnerPlayer2 ? "emWin" : "em"}>{deckPlayer2Remaining}</em>
                   </div>
                 )}
               </div>
