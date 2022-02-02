@@ -122,7 +122,7 @@ function App() {
     };
     setIsBattlePlayer1(true);
     setDrawCardDeckPlayer1([deckPlayer1[0]]);
-    setDeckOnGamePlayer1(deckPlayer1.splice(0, 1));
+    setDeckOnGamePlayer1([...deckOnGamePlayer1, deckPlayer1.splice(0, 1)]);
     setDeckPlayer1Remaining(deckPlayer1.length);
     setWaitPlayer1(false);
     setStartBattlePlayer1(false);
@@ -136,7 +136,7 @@ function App() {
     };
     setIsBattlePlayer2(true);
     setDrawCardDeckPlayer2([deckPlayer2[0]]);
-    setDeckOnGamePlayer2(deckPlayer2.splice(0, 1));
+    setDeckOnGamePlayer2([...deckOnGamePlayer2, deckPlayer2.splice(0, 1)]);
     setDeckPlayer2Remaining(deckPlayer2.length);
     setWaitPlayer2(false);
     setStartBattlePlayer2(false);
