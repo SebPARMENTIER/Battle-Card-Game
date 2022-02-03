@@ -8,8 +8,6 @@ function App() {
   const [deckId, setDeckId] = useState();
   const [drawCardDeckPlayer1, setDrawCardDeckPlayer1] = useState([]);
   const [drawCardDeckPlayer2, setDrawCardDeckPlayer2] = useState([]);
-  const [listPlayer1, setListPlayer1] = useState();
-  const [listPlayer2, setListPlayer2] = useState();
   const [waitPlayer1, setWaitPlayer1] = useState(false);
   const [waitPlayer2, setWaitPlayer2] = useState(false);
   const [startBattlePlayer1, setStartBattlePlayer1] = useState(false);
@@ -32,9 +30,6 @@ function App() {
   const [gameOverPlayer1, setGameOverPlayer1] = useState(false);
   const [gameOverPlayer2, setGameOverPlayer2] = useState(false);
 
-  const pilePlayer1 = "pilePlayer1";
-  const pilePlayer2 = "pilePlayer2";
-
   const drawSound = new Audio(drawAudio);
   const battleSound = new Audio(battleAudio);
 
@@ -46,7 +41,6 @@ function App() {
   const [deckOnGamePlayer1, setDeckOnGamePlayer1] = useState([]);
   const [deckOnGamePlayer2, setDeckOnGamePlayer2] = useState([]);
 
-  
   // Shuffle cards array
   const fisherYatesShuffle = (array) => {
     for (let i = array.length-1; i > 0; i--) {
@@ -73,12 +67,9 @@ function App() {
     setDeckPlayer2Remaining(deckPlayer2.length);
   }, [deckPlayer2Remaining]);
 
- 
   console.log('deck', deck);
   console.log('deck1', deckPlayer1);
   console.log('deck2', deckPlayer2);
-
-  
 
   // Draw a card from deck player 1
   const drawCardPlayer1 = () => {
@@ -97,7 +88,8 @@ function App() {
   };
     console.log('deckOnGame1', deckOnGamePlayer1);
     console.log('deckOnGame2', deckOnGamePlayer2);
-
+    console.log('deckBattlePlayer1', deckBattlePlayer1);
+    console.log('deckBattlePlayer2', deckBattlePlayer2);
 
 
   // Draw a card from deck player 2
@@ -122,7 +114,7 @@ function App() {
     };
     setIsBattlePlayer1(true);
     setDrawCardDeckPlayer1([deckPlayer1[0]]);
-    setDeckOnGamePlayer1([...deckOnGamePlayer1, deckPlayer1.splice(0, 1)]);
+    setDeckBattlePlayer1([...deckBattlePlayer1, deckOnGamePlayer1.splice(0, 1), deckPlayer1.splice(0, 1)]);
     setDeckPlayer1Remaining(deckPlayer1.length);
     setWaitPlayer1(false);
     setStartBattlePlayer1(false);
@@ -136,7 +128,7 @@ function App() {
     };
     setIsBattlePlayer2(true);
     setDrawCardDeckPlayer2([deckPlayer2[0]]);
-    setDeckOnGamePlayer2([...deckOnGamePlayer2, deckPlayer2.splice(0, 1)]);
+    setDeckBattlePlayer2([...deckBattlePlayer2, deckOnGamePlayer2.splice(0, 1), deckPlayer2.splice(0, 1)]);
     setDeckPlayer2Remaining(deckPlayer2.length);
     setWaitPlayer2(false);
     setStartBattlePlayer2(false);
@@ -209,7 +201,18 @@ function App() {
     if (deckOnGamePlayer1[0].value > deckOnGamePlayer2[0].value) {
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
-      setDeckPlayer1([...deckPlayer1, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
+      const cardsWinOnBattle = deckBattlePlayer1.concat(deckBattlePlayer2);
+      const cardsWinOnBattleArray = [];
+      cardsWinOnBattle.map((card) => {
+        card.forEach((c) => cardsWinOnBattleArray.push(c));
+      });
+      console.log('cardsWinOnBattleArray', cardsWinOnBattleArray);
+      if (cardsWinOnBattle.length === 0) {
+        setDeckPlayer1([...deckPlayer1, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
+      } else {
+        const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
+        setDeckPlayer1([...deckPlayer1, deckOnGamePlayer1[0], deckOnGamePlayer2[0], ...cardsWinBattleGoToDeck]);
+      };
       setWaitPlayer1(false);
       setWaitPlayer2(false);
       setDeckBattlePlayer1([]);
@@ -220,7 +223,18 @@ function App() {
     } else if (deckOnGamePlayer1[0].value < deckOnGamePlayer2[0].value) {
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
-      setDeckPlayer2([...deckPlayer2, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
+      const cardsWinOnBattle = deckBattlePlayer1.concat(deckBattlePlayer2);
+      const cardsWinOnBattleArray = [];
+      cardsWinOnBattle.map((card) => {
+        card.forEach((c) => cardsWinOnBattleArray.push(c));
+      });
+      console.log('cardsWinOnBattleArray', cardsWinOnBattleArray);
+      if (cardsWinOnBattle.length === 0) {
+        setDeckPlayer2([...deckPlayer2, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
+      } else {
+        const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
+          setDeckPlayer2([...deckPlayer2, deckOnGamePlayer1[0], deckOnGamePlayer2[0], ...cardsWinBattleGoToDeck]);
+      };
       setDeckOnGamePlayer1([]);
       setDeckOnGamePlayer2([]);
       setWaitPlayer1(false);
@@ -239,17 +253,12 @@ function App() {
         onBattle();
         setStartBattlePlayer1(true);
         setStartBattlePlayer2(true);
-        
-        // setDeckOnGamePlayer1([...deckOnGamePlayer1, drawCardDeckPlayer1]);
-        // setDeckOnGamePlayer2([...deckOnGamePlayer2, drawCardDeckPlayer2]);
-  
         console.log("battle");
       }
     }
     //console.log("deck battle P1 et P2", deckBattlePlayer1, deckBattlePlayer2);
   };
   
-    
   const showRulesAgain = () => {
     setShowRules(!showRules)
   };
@@ -269,7 +278,6 @@ function App() {
   }
 
   //console.log("drawCardDeckPlayer1", drawCardDeckPlayer1);
-
 
   return (
     <div className="App">
@@ -402,9 +410,9 @@ function App() {
               <div className={isBattlePlayer2 ? "App-area-player2-game-deck-button-draw" : (flipCardPlayer2 ? "App-area-player2-game-play activeFrontPlayer2" : "App-area-player2-game-play")}>
                 {drawCardDeckPlayer2.map((c) => (
                   <img
-                    key={c.code}
+                    key={c.id}
                     src={c.image}
-                    alt={c.code}
+                    alt={c.id}
                     className={isBattlePlayer2 ? "hidden" : (disapearCardPlayer2 ? "App-area-player2-game-play-img-disapear" : "App-area-player2-game-play-img")}
                   />
                 ))}
