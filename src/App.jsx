@@ -41,6 +41,8 @@ function App() {
   const [deckOnGamePlayer1, setDeckOnGamePlayer1] = useState([]);
   const [deckOnGamePlayer2, setDeckOnGamePlayer2] = useState([]);
 
+  const [cardsWinOnBattleToShow, setCardsWinOnBattleToShow] = useState([]);
+
   // Shuffle cards array
   const fisherYatesShuffle = (array) => {
     for (let i = array.length-1; i > 0; i--) {
@@ -90,6 +92,8 @@ function App() {
     console.log('deckOnGame2', deckOnGamePlayer2);
     console.log('deckBattlePlayer1', deckBattlePlayer1);
     console.log('deckBattlePlayer2', deckBattlePlayer2);
+    console.log('cardsWinOnBattleToShow', cardsWinOnBattleToShow);
+
 
 
   // Draw a card from deck player 2
@@ -153,7 +157,7 @@ function App() {
         setEndOfDeckPlayer1(false);
         setEndOfDeckPlayer2(false);
       };
-      if (deckPlayer2Remaining === 1) {
+      if (deckPlayer2Remaining === 0) {
         setGameOverPlayer2(true);
       };
       setRoundWinnerPlayer1(true);
@@ -179,7 +183,7 @@ function App() {
         setEndOfDeckPlayer1(false);
         setEndOfDeckPlayer2(false);
       };
-      if (deckPlayer1Remaining === 1) {
+      if (deckPlayer1Remaining === 0) {
         setGameOverPlayer1(true);
       };
       setRoundWinnerPlayer2(true);
@@ -206,6 +210,8 @@ function App() {
       cardsWinOnBattle.map((card) => {
         card.forEach((c) => cardsWinOnBattleArray.push(c));
       });
+      setCardsWinOnBattleToShow(cardsWinOnBattleArray, deckOnGamePlayer1[0], deckOnGamePlayer2[0]);
+      console.log('cardsWinOnBattleToShow', cardsWinOnBattleToShow);
       console.log('cardsWinOnBattleArray', cardsWinOnBattleArray);
       if (cardsWinOnBattle.length === 0) {
         setDeckPlayer1([...deckPlayer1, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
@@ -213,8 +219,6 @@ function App() {
         const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
         setDeckPlayer1([...deckPlayer1, deckOnGamePlayer1[0], deckOnGamePlayer2[0], ...cardsWinBattleGoToDeck]);
       };
-      setWaitPlayer1(false);
-      setWaitPlayer2(false);
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
       setDeckOnGamePlayer1([]);
@@ -228,6 +232,8 @@ function App() {
       cardsWinOnBattle.map((card) => {
         card.forEach((c) => cardsWinOnBattleArray.push(c));
       });
+      setCardsWinOnBattleToShow(cardsWinOnBattleArray, deckOnGamePlayer1[0], deckOnGamePlayer2[0]);
+      console.log('cardsWinOnBattleToShow', cardsWinOnBattleToShow);
       console.log('cardsWinOnBattleArray', cardsWinOnBattleArray);
       if (cardsWinOnBattle.length === 0) {
         setDeckPlayer2([...deckPlayer2, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
@@ -235,16 +241,16 @@ function App() {
         const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
           setDeckPlayer2([...deckPlayer2, deckOnGamePlayer1[0], deckOnGamePlayer2[0], ...cardsWinBattleGoToDeck]);
       };
-      setDeckOnGamePlayer1([]);
-      setDeckOnGamePlayer2([]);
-      setWaitPlayer1(false);
-      setWaitPlayer2(false);
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
+      setDeckOnGamePlayer1([]);
+      setDeckOnGamePlayer2([]);
       onRoundWinPlayer2();
     }  else if (deckOnGamePlayer1[0].value === deckOnGamePlayer2[0].value) {
-      if (deckPlayer1Remaining === 1) {
+      if (deckPlayer1Remaining === 0) {
         setGameOverPlayer1(true);
+      } else if (deckPlayer2Remaining === 0) {
+        setGameOverPlayer2(true);
       } else {
         setTimeout(() => {
           setFlipCardPlayer1(false);
@@ -378,6 +384,19 @@ function App() {
             </div>
           </div>
           <div className={battle ? "App-area-battle" : "hidden"}>BATAILLE</div>
+          
+            <div className="App-area-battle-show">
+            {cardsWinOnBattleToShow.map((card) => (
+              <img
+                key={card.id}
+                src={card.image}
+                alt={card.id}
+                className={disapearCardPlayer1 ? "App-area-player2-game-play-img-disapear" : "App-area-player2-game-play-img"}
+              />
+              ))}
+            </div>
+          
+            
           {gameOverPlayer1 && (
             <div className="App-area-gameOver">
               <div className="App-area-gameOver-text">
