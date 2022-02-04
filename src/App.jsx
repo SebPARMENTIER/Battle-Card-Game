@@ -30,6 +30,7 @@ function App() {
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [showRules, setShowRules] = useState(true);
   const [battle, setBattle] = useState(false);
+  const [showCards, setShowCards] = useState(false);
 
   const [waitPlayer1, setWaitPlayer1] = useState(false);
   const [waitPlayer2, setWaitPlayer2] = useState(false);
@@ -177,6 +178,16 @@ function App() {
       setBattle(false)
     }, 750);
   };
+
+  // Animations when show hidden cards
+  const onShowCards = () => {
+    setTimeout(() => {
+      setShowCards(true);
+    }, 1250);
+    setTimeout(() => {
+      setShowCards(false);
+    }, 2000);
+  };
   
   // Animations when Player 1 wins
   const onRoundWinPlayer1 = () => {
@@ -283,6 +294,7 @@ function App() {
       // Or if there is battle, cards won return to the winning deck in the good order
       } else {
         setDeckPlayer1([...deckPlayer1, ...cardsWinOnBattlePlayer1GoToDeck , deckOnGamePlayer1[0], ...cardsWinOnBattlePlayer2GoToDeck, deckOnGamePlayer2[0]]);
+        onShowCards();
       };
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
@@ -334,7 +346,8 @@ function App() {
       // Or if there is battle, cards won return to the winning deck in the good order
       } else {
         //const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
-          setDeckPlayer2([...deckPlayer2, ...cardsWinOnBattlePlayer2GoToDeck, deckOnGamePlayer2[0], ...cardsWinOnBattlePlayer1GoToDeck, deckOnGamePlayer1[0]]);
+        setDeckPlayer2([...deckPlayer2, ...cardsWinOnBattlePlayer2GoToDeck, deckOnGamePlayer2[0], ...cardsWinOnBattlePlayer1GoToDeck, deckOnGamePlayer1[0]]);
+        onShowCards();
       };
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
@@ -365,6 +378,9 @@ function App() {
       }
     }
   };
+
+  console.log('deckPlayer1', deckPlayer1);
+  console.log('deckPlayer2', deckPlayer2);
   
   return (
     <div className="App">
@@ -465,19 +481,25 @@ function App() {
             </div>
           </div>
           <div className={battle ? "App-area-battle" : "hidden"}>BATAILLE</div>
-          <div className="App-area-battle-show">
-            <div className={disapearCardPlayer1 ? "App-area-battle-show-desc-disapear" : "App-area-battle-show-desc"}>
-              Cartes face cachée gagnées
+          {showCards && (
+            <div className="App-area-battle-show">
+              <div className="App-area-battle-show-all">
+                <div className="App-area-battle-show-all-desc">
+                  Cartes face cachée gagnées
+                </div>
+                <div className="App-area-battle-show-all-cards">
+                  {cardsWinOnBattleToShow.map((card) => (
+                    <img
+                      key={card.id}
+                      src={card.image}
+                      alt={card.id}
+                      className={disapearCardPlayer1 ? "App-area-player2-game-play-img-disapear" : "App-area-player2-game-play-img"}
+                    />
+                  ))}
+                </div>
+              </div>
             </div>
-            {cardsWinOnBattleToShow.map((card) => (
-              <img
-                key={card.id}
-                src={card.image}
-                alt={card.id}
-                className={disapearCardPlayer1 ? "App-area-player2-game-play-img-disapear" : "App-area-player2-game-play-img"}
-              />
-            ))}
-          </div>
+          )}
           {gameOverPlayer1 && (
             <div className="App-area-gameOver">
               <div className="App-area-gameOver-text">

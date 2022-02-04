@@ -83,6 +83,7 @@
 
       &:hover {
         background-position: right center;
+        cursor: pointer;
       }
     }
   }
@@ -203,20 +204,29 @@
 
       &-show {
         width: 50%;
-        display: flex;
-        flex-wrap: wrap;
-        justify-content: space-around;
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translate(-50%, -50%) scale(0.8);
         z-index: 2;
 
-        &-desc {
-          font-size: 2em;
+        &-all {
+          display: flex;
+          flex-direction: column;
 
-          &-disapear {
-            animation: scale-display 0.5s;
+          &-desc {
+            font-size: 2em;
+            text-align: center;
+            padding-bottom: 1em;
+  
+            &-disapear {
+              animation: scale-display 0.5s;
+            }
+          }
+
+          &-cards {
+            display: flex;
+            justify-content: center;
           }
         }
       }
