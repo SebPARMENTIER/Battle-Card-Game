@@ -212,9 +212,25 @@ function App() {
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
       const cardsWinOnBattlePlayer1 = deckBattlePlayer1.map((cardWinDeck1) => cardWinDeck1);
+    console.log('cardsWinOnBattlePlayer1', cardsWinOnBattlePlayer1);
+
       const cardsWinOnBattlePlayer2 = deckBattlePlayer2.map((cardWinDeck2) => cardWinDeck2);
       const cardsWinOnBattleArrayConcat = [];
       cardsWinOnBattleArrayConcat.push(...cardsWinOnBattlePlayer1, ...cardsWinOnBattlePlayer2);
+      
+    console.log('cardsWinOnBattleArrayConcat', cardsWinOnBattleArrayConcat);
+
+      const cardsWinOnBattlePlayer1GoToDeck = [];
+      cardsWinOnBattlePlayer1.map((card) => {
+        card.forEach((c) => cardsWinOnBattlePlayer1GoToDeck.push(c));
+       });
+      console.log('cardsWinOnBattlePlayer1GoToDeck', cardsWinOnBattlePlayer1GoToDeck);
+
+      const cardsWinOnBattlePlayer2GoToDeck = [];
+      cardsWinOnBattlePlayer2.map((card) => {
+        card.forEach((c) => cardsWinOnBattlePlayer2GoToDeck.push(c));
+       });
+
       const cardsWinOnBattleArray = [];
       cardsWinOnBattleArrayConcat.map((card) => {
         card.forEach((c) => cardsWinOnBattleArray.push(c));
@@ -232,7 +248,7 @@ function App() {
         setDeckPlayer1([...deckPlayer1, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
       } else {
         //const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
-        setDeckPlayer1([...deckPlayer1, ...cardsWinOnBattlePlayer1 , deckOnGamePlayer1[0], ...cardsWinOnBattlePlayer2, deckOnGamePlayer2[0]]);
+        setDeckPlayer1([...deckPlayer1, ...cardsWinOnBattlePlayer1GoToDeck , deckOnGamePlayer1[0], ...cardsWinOnBattlePlayer2GoToDeck, deckOnGamePlayer2[0]]);
       };
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
@@ -243,15 +259,32 @@ function App() {
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
       const cardsWinOnBattlePlayer1 = deckBattlePlayer1.map((cardWinDeck1) => cardWinDeck1);
+    console.log('cardsWinOnBattlePlayer1', cardsWinOnBattlePlayer1);
+
       const cardsWinOnBattlePlayer2 = deckBattlePlayer2.map((cardWinDeck2) => cardWinDeck2);
       const cardsWinOnBattleArrayConcat = [];
       cardsWinOnBattleArrayConcat.push(...cardsWinOnBattlePlayer2, ...cardsWinOnBattlePlayer1);
+
+      console.log('cardsWinOnBattleArrayConcat', cardsWinOnBattleArrayConcat);
+
+
+      const cardsWinOnBattlePlayer1GoToDeck = [];
+      cardsWinOnBattlePlayer1.map((card) => {
+        card.forEach((c) => cardsWinOnBattlePlayer1GoToDeck.push(c));
+       });
+      console.log('cardsWinOnBattlePlayer1GoToDeck', cardsWinOnBattlePlayer1GoToDeck);
+
+      const cardsWinOnBattlePlayer2GoToDeck = [];
+      cardsWinOnBattlePlayer2.map((card) => {
+        card.forEach((c) => cardsWinOnBattlePlayer2GoToDeck.push(c));
+       });
+
+      const cardsWinOnBattleArray = [];
       cardsWinOnBattleArrayConcat.map((card) => {
         card.forEach((c) => cardsWinOnBattleArray.push(c));
       });
-      const cardsWinOnBattleArray = [];
       
-      cardsWinOnBattleArray.push(...cardsWinOnBattlePlayer2, ...cardsWinOnBattlePlayer1);
+      //cardsWinOnBattleArray.push(...cardsWinOnBattlePlayer2, ...cardsWinOnBattlePlayer1);
 
       // Keep odd index to show hidden cards win on battle
       const cardsWinOnBattleToShowOddIndex = [];
@@ -267,7 +300,7 @@ function App() {
         setDeckPlayer2([...deckPlayer2, deckOnGamePlayer2[0], deckOnGamePlayer1[0]]);
       } else {
         //const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
-          setDeckPlayer2([...deckPlayer2, ...cardsWinOnBattlePlayer2, deckOnGamePlayer2[0], ...cardsWinOnBattlePlayer1, deckOnGamePlayer1[0]]);
+          setDeckPlayer2([...deckPlayer2, ...cardsWinOnBattlePlayer2GoToDeck, deckOnGamePlayer2[0], ...cardsWinOnBattlePlayer1GoToDeck, deckOnGamePlayer1[0]]);
       };
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
@@ -367,7 +400,7 @@ function App() {
                 Puis, ils tirent une deuxième carte qu'ils posent cette fois-ci face découverte et c'est cette dernière qui départagera les joueurs. Celui qui la valeur la plus forte, l'emporte.
               </p>
               <p className="App-home-rules-desc-text">
-                Le gagnant est celui qui remporte toutes les cartes du paquet.
+                Le gagnant est celui qui remporte toutes les cartes du paquet. S'il y a bataille et qu'un joueur n'a plus de carte pour disputer cette bataille, il perd la partie.
               </p>
             </div>
           </div>
@@ -416,13 +449,16 @@ function App() {
           <div className={battle ? "App-area-battle" : "hidden"}>BATAILLE</div>
           
             <div className="App-area-battle-show">
-            {cardsWinOnBattleToShow.map((card) => (
-              <img
-                key={card.id}
-                src={card.image}
-                alt={card.id}
-                className={disapearCardPlayer1 ? "App-area-player2-game-play-img-disapear" : "App-area-player2-game-play-img"}
-              />
+              <div className={disapearCardPlayer1 ? "App-area-battle-show-desc-disapear" : "App-area-battle-show-desc"}>
+                Cartes face cachée gagnées
+              </div>
+              {cardsWinOnBattleToShow.map((card) => (
+                <img
+                  key={card.id}
+                  src={card.image}
+                  alt={card.id}
+                  className={disapearCardPlayer1 ? "App-area-player2-game-play-img-disapear" : "App-area-player2-game-play-img"}
+                />
               ))}
             </div>
           
