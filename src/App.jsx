@@ -1,8 +1,9 @@
 import { useState, useEffect } from 'react';
 import './App.scss';
 import cards from './assets/data/cards'
-import drawAudio from '../draw.mp3';
-import battleAudio from '../battle.mp3';
+import drawAudio from './assets/sounds/draw.mp3';
+import battleAudio from './assets/sounds/battle.mp3';
+import winAudio from './assets/sounds/win.mp3';
 
 function App() {
   const [deckId, setDeckId] = useState();
@@ -32,6 +33,7 @@ function App() {
 
   const drawSound = new Audio(drawAudio);
   const battleSound = new Audio(battleAudio);
+  const winSound = new Audio(winAudio);
 
   const [deck, setDeck] = useState(cards);
   const [deckPlayer1, setDeckPlayer1] = useState(cards.slice(0, 26));
@@ -115,6 +117,7 @@ function App() {
   const drawBattleCardPlayer1 = () => {
     if (deckPlayer2Remaining === 0) {
       setGameOverPlayer2(true);
+      winSound.play();
     };
     setIsBattlePlayer1(true);
     setDrawCardDeckPlayer1([deckPlayer1[0]]);
@@ -129,6 +132,7 @@ function App() {
   const drawBattleCardPlayer2 = () => {
     if (deckPlayer1Remaining === 0) {
       setGameOverPlayer1(true);
+      winSound.play();
     };
     setIsBattlePlayer2(true);
     setDrawCardDeckPlayer2([deckPlayer2[0]]);
@@ -159,6 +163,7 @@ function App() {
       };
       if (deckPlayer2Remaining === 0) {
         setGameOverPlayer2(true);
+        winSound.play();
       };
       setRoundWinnerPlayer1(true);
       setDrawCardDeckPlayer1([]);
@@ -185,6 +190,7 @@ function App() {
       };
       if (deckPlayer1Remaining === 0) {
         setGameOverPlayer1(true);
+        winSound.play();
       };
       setRoundWinnerPlayer2(true);
       setDrawCardDeckPlayer1([]);
@@ -205,19 +211,28 @@ function App() {
     if (deckOnGamePlayer1[0].value > deckOnGamePlayer2[0].value) {
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
-      const cardsWinOnBattle = deckBattlePlayer1.concat(deckBattlePlayer2);
+      const cardsWinOnBattlePlayer1 = deckBattlePlayer1.map((cardWinDeck1) => cardWinDeck1);
+      const cardsWinOnBattlePlayer2 = deckBattlePlayer2.map((cardWinDeck2) => cardWinDeck2);
+      const cardsWinOnBattleArrayConcat = [];
+      cardsWinOnBattleArrayConcat.push(...cardsWinOnBattlePlayer1, ...cardsWinOnBattlePlayer2);
       const cardsWinOnBattleArray = [];
-      cardsWinOnBattle.map((card) => {
+      cardsWinOnBattleArrayConcat.map((card) => {
         card.forEach((c) => cardsWinOnBattleArray.push(c));
       });
-      setCardsWinOnBattleToShow(cardsWinOnBattleArray, deckOnGamePlayer1[0], deckOnGamePlayer2[0]);
+      const cardsWinOnBattleToShowOddIndex = [];
+      for (let i = 0; i < cardsWinOnBattleArray.length; i++) {
+        if ((i % 2) == 1) {
+          cardsWinOnBattleToShowOddIndex.push(cardsWinOnBattleArray[i]);
+        };
+      };
+      setCardsWinOnBattleToShow(cardsWinOnBattleToShowOddIndex);
       console.log('cardsWinOnBattleToShow', cardsWinOnBattleToShow);
       console.log('cardsWinOnBattleArray', cardsWinOnBattleArray);
-      if (cardsWinOnBattle.length === 0) {
+      if (cardsWinOnBattleArray.length === 0) {
         setDeckPlayer1([...deckPlayer1, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
       } else {
-        const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
-        setDeckPlayer1([...deckPlayer1, deckOnGamePlayer1[0], deckOnGamePlayer2[0], ...cardsWinBattleGoToDeck]);
+        //const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
+        setDeckPlayer1([...deckPlayer1, ...cardsWinOnBattlePlayer1 , deckOnGamePlayer1[0], ...cardsWinOnBattlePlayer2, deckOnGamePlayer2[0]]);
       };
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
@@ -227,19 +242,32 @@ function App() {
     } else if (deckOnGamePlayer1[0].value < deckOnGamePlayer2[0].value) {
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
-      const cardsWinOnBattle = deckBattlePlayer1.concat(deckBattlePlayer2);
-      const cardsWinOnBattleArray = [];
-      cardsWinOnBattle.map((card) => {
+      const cardsWinOnBattlePlayer1 = deckBattlePlayer1.map((cardWinDeck1) => cardWinDeck1);
+      const cardsWinOnBattlePlayer2 = deckBattlePlayer2.map((cardWinDeck2) => cardWinDeck2);
+      const cardsWinOnBattleArrayConcat = [];
+      cardsWinOnBattleArrayConcat.push(...cardsWinOnBattlePlayer2, ...cardsWinOnBattlePlayer1);
+      cardsWinOnBattleArrayConcat.map((card) => {
         card.forEach((c) => cardsWinOnBattleArray.push(c));
       });
-      setCardsWinOnBattleToShow(cardsWinOnBattleArray, deckOnGamePlayer1[0], deckOnGamePlayer2[0]);
+      const cardsWinOnBattleArray = [];
+      
+      cardsWinOnBattleArray.push(...cardsWinOnBattlePlayer2, ...cardsWinOnBattlePlayer1);
+
+      // Keep odd index to show hidden cards win on battle
+      const cardsWinOnBattleToShowOddIndex = [];
+      for (let i = 0; i < cardsWinOnBattleArray.length; i++) {
+        if ((i % 2) == 1) {
+          cardsWinOnBattleToShowOddIndex.push(cardsWinOnBattleArray[i]);
+        };
+      };
+      setCardsWinOnBattleToShow(cardsWinOnBattleToShowOddIndex);
       console.log('cardsWinOnBattleToShow', cardsWinOnBattleToShow);
       console.log('cardsWinOnBattleArray', cardsWinOnBattleArray);
-      if (cardsWinOnBattle.length === 0) {
-        setDeckPlayer2([...deckPlayer2, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
+      if (cardsWinOnBattleArray.length === 0) {
+        setDeckPlayer2([...deckPlayer2, deckOnGamePlayer2[0], deckOnGamePlayer1[0]]);
       } else {
-        const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
-          setDeckPlayer2([...deckPlayer2, deckOnGamePlayer1[0], deckOnGamePlayer2[0], ...cardsWinBattleGoToDeck]);
+        //const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
+          setDeckPlayer2([...deckPlayer2, ...cardsWinOnBattlePlayer2, deckOnGamePlayer2[0], ...cardsWinOnBattlePlayer1, deckOnGamePlayer1[0]]);
       };
       setDeckBattlePlayer1([]);
       setDeckBattlePlayer2([]);
@@ -249,8 +277,10 @@ function App() {
     }  else if (deckOnGamePlayer1[0].value === deckOnGamePlayer2[0].value) {
       if (deckPlayer1Remaining === 0) {
         setGameOverPlayer1(true);
+        winSound.play();
       } else if (deckPlayer2Remaining === 0) {
         setGameOverPlayer2(true);
+        winSound.play();
       } else {
         setTimeout(() => {
           setFlipCardPlayer1(false);
@@ -288,7 +318,7 @@ function App() {
   return (
     <div className="App">
       <div className={showRules ? "App-home" : "App-home-norules"}>
-        <h1 className="App-home-header" onClick={showHome}>
+        <h1 className="App-home-header">
             La bataille
         </h1>
         {isGameStarted && (
