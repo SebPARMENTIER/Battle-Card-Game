@@ -6,44 +6,59 @@ import battleAudio from './assets/sounds/battle.mp3';
 import winAudio from './assets/sounds/win.mp3';
 
 function App() {
-  const [deckId, setDeckId] = useState();
-  const [drawCardDeckPlayer1, setDrawCardDeckPlayer1] = useState([]);
-  const [drawCardDeckPlayer2, setDrawCardDeckPlayer2] = useState([]);
-  const [waitPlayer1, setWaitPlayer1] = useState(false);
-  const [waitPlayer2, setWaitPlayer2] = useState(false);
-  const [startBattlePlayer1, setStartBattlePlayer1] = useState(false);
-  const [startBattlePlayer2, setStartBattlePlayer2] = useState(false);
-  const [isBattlePlayer1, setIsBattlePlayer1] = useState(false);
-  const [isBattlePlayer2, setIsBattlePlayer2] = useState(false);
-  const [deckBattlePlayer1, setDeckBattlePlayer1] = useState([]);
-  const [deckBattlePlayer2, setDeckBattlePlayer2] = useState([]);
-  const [isGameStarted, setIsGameStarted] = useState(false);
-  const [showRules, setShowRules] = useState(true);
-  const [battle, setBattle] = useState(false);
-  const [flipCardPlayer1, setFlipCardPlayer1] = useState(false);
-  const [flipCardPlayer2, setFlipCardPlayer2] = useState(false);
-  const [roundWinnerPlayer1, setRoundWinnerPlayer1] = useState(false);
-  const [roundWinnerPlayer2, setRoundWinnerPlayer2] = useState(false);
-  const [disapearCardPlayer1, setDisapearCardPlayer1] = useState(false);
-  const [disapearCardPlayer2, setDisapearCardPlayer2] = useState(false);
-  const [endOfDeckPlayer1, setEndOfDeckPlayer1] = useState(false);
-  const [endOfDeckPlayer2, setEndOfDeckPlayer2] = useState(false);
-  const [gameOverPlayer1, setGameOverPlayer1] = useState(false);
-  const [gameOverPlayer2, setGameOverPlayer2] = useState(false);
 
-  const drawSound = new Audio(drawAudio);
-  const battleSound = new Audio(battleAudio);
-  const winSound = new Audio(winAudio);
-
+  // States
   const [deck, setDeck] = useState(cards);
+
   const [deckPlayer1, setDeckPlayer1] = useState(cards.slice(0, 26));
   const [deckPlayer2, setDeckPlayer2] = useState(cards.slice(26, 52));
+
   const [deckPlayer1Remaining, setDeckPlayer1Remaining] = useState(deckPlayer1.length);
   const [deckPlayer2Remaining, setDeckPlayer2Remaining] = useState(deckPlayer2.length);
+
+  const [drawCardDeckPlayer1, setDrawCardDeckPlayer1] = useState([]);
+  const [drawCardDeckPlayer2, setDrawCardDeckPlayer2] = useState([]);
+
   const [deckOnGamePlayer1, setDeckOnGamePlayer1] = useState([]);
   const [deckOnGamePlayer2, setDeckOnGamePlayer2] = useState([]);
 
+  const [deckBattlePlayer1, setDeckBattlePlayer1] = useState([]);
+  const [deckBattlePlayer2, setDeckBattlePlayer2] = useState([]);
+
   const [cardsWinOnBattleToShow, setCardsWinOnBattleToShow] = useState([]);
+
+  const [isGameStarted, setIsGameStarted] = useState(false);
+  const [showRules, setShowRules] = useState(true);
+  const [battle, setBattle] = useState(false);
+
+  const [waitPlayer1, setWaitPlayer1] = useState(false);
+  const [waitPlayer2, setWaitPlayer2] = useState(false);
+
+  const [startBattlePlayer1, setStartBattlePlayer1] = useState(false);
+  const [startBattlePlayer2, setStartBattlePlayer2] = useState(false);
+
+  const [isBattlePlayer1, setIsBattlePlayer1] = useState(false);
+  const [isBattlePlayer2, setIsBattlePlayer2] = useState(false);
+
+  const [flipCardPlayer1, setFlipCardPlayer1] = useState(false);
+  const [flipCardPlayer2, setFlipCardPlayer2] = useState(false);
+
+  const [roundWinnerPlayer1, setRoundWinnerPlayer1] = useState(false);
+  const [roundWinnerPlayer2, setRoundWinnerPlayer2] = useState(false);
+
+  const [disapearCardPlayer1, setDisapearCardPlayer1] = useState(false);
+  const [disapearCardPlayer2, setDisapearCardPlayer2] = useState(false);
+
+  const [endOfDeckPlayer1, setEndOfDeckPlayer1] = useState(false);
+  const [endOfDeckPlayer2, setEndOfDeckPlayer2] = useState(false);
+
+  const [gameOverPlayer1, setGameOverPlayer1] = useState(false);
+  const [gameOverPlayer2, setGameOverPlayer2] = useState(false);
+
+  // Sounds
+  const drawSound = new Audio(drawAudio);
+  const battleSound = new Audio(battleAudio);
+  const winSound = new Audio(winAudio);
 
   // Shuffle cards array
   const fisherYatesShuffle = (array) => {
@@ -53,6 +68,7 @@ function App() {
     };
   }
 
+  // Start game
   const startGame = () => {
     setIsGameStarted(true);
     setShowRules(false);
@@ -61,19 +77,37 @@ function App() {
     setDeckPlayer2(deck.slice(26, 52));
   };
 
+  // Show or hide rules
+  const showRulesAgain = () => {
+    setShowRules(!showRules)
+  };
+
+  // Go to home to start a new game
+  const showHome = () => {
+    setIsGameStarted(false);
+    setDeck(cards);
+    setDrawCardDeckPlayer1([]);
+    setDrawCardDeckPlayer2([]);
+    setShowRules(true);
+    setDeckBattlePlayer1([]);
+    setDeckBattlePlayer2([]);
+    setIsBattlePlayer1(false);
+    setIsBattlePlayer2(false);
+    setGameOverPlayer1(false);
+    setGameOverPlayer2(false);
+  }
+
+  // Show cards remaining from deckPlayer 1
   useEffect(() => {
     setDeckPlayer1Remaining(deckPlayer1.length);
     setDeckPlayer2Remaining(deckPlayer2.length);
   }, [deckPlayer1Remaining]);
 
+  // Show cards remaining from deckPlayer 2
   useEffect(() => {
     setDeckPlayer1Remaining(deckPlayer1.length);
     setDeckPlayer2Remaining(deckPlayer2.length);
   }, [deckPlayer2Remaining]);
-
-  console.log('deck', deck);
-  console.log('deck1', deckPlayer1);
-  console.log('deck2', deckPlayer2);
 
   // Draw a card from deck player 1
   const drawCardPlayer1 = () => {
@@ -88,15 +122,7 @@ function App() {
     if (deckPlayer1Remaining === 1) {
       setEndOfDeckPlayer1(true);
     }
-    console.log('newDeck1', deckPlayer1);
   };
-    console.log('deckOnGame1', deckOnGamePlayer1);
-    console.log('deckOnGame2', deckOnGamePlayer2);
-    console.log('deckBattlePlayer1', deckBattlePlayer1);
-    console.log('deckBattlePlayer2', deckBattlePlayer2);
-    console.log('cardsWinOnBattleToShow', cardsWinOnBattleToShow);
-
-
 
   // Draw a card from deck player 2
   const drawCardPlayer2 = () => {
@@ -113,7 +139,7 @@ function App() {
     }
   };
 
-  // Draw a card from deck player 1 when battle
+  // Draw a card from deck player 1 when there is battle
   const drawBattleCardPlayer1 = () => {
     if (deckPlayer2Remaining === 0) {
       setGameOverPlayer2(true);
@@ -128,7 +154,7 @@ function App() {
     drawSound.play();
   };
 
-  // Draw a card from deck player 2 when battle
+  // Draw a card from deck player 2 when there is battle
   const drawBattleCardPlayer2 = () => {
     if (deckPlayer1Remaining === 0) {
       setGameOverPlayer1(true);
@@ -143,6 +169,7 @@ function App() {
     drawSound.play();
   };
 
+  // Animations when there is battle
   const onBattle = () => {
     battleSound.play();
     setBattle(true);
@@ -151,6 +178,7 @@ function App() {
     }, 750);
   };
   
+  // Animations when Player 1 wins
   const onRoundWinPlayer1 = () => {
     setTimeout(() => {
       setDisapearCardPlayer1(true);
@@ -178,6 +206,7 @@ function App() {
     }, 1250);
   };
 
+  // Animations when Player 2 wins
   const onRoundWinPlayer2 = () => {
     setTimeout(() => {
       setDisapearCardPlayer1(true);
@@ -205,32 +234,36 @@ function App() {
     }, 1250);
   };
 
+  // Game functions
   if (waitPlayer1 && waitPlayer2) {
     setWaitPlayer1(false);
     setWaitPlayer2(false);
+
+    // If Player1 wins the round
     if (deckOnGamePlayer1[0].value > deckOnGamePlayer2[0].value) {
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
-      const cardsWinOnBattlePlayer1 = deckBattlePlayer1.map((cardWinDeck1) => cardWinDeck1);
-    console.log('cardsWinOnBattlePlayer1', cardsWinOnBattlePlayer1);
+      
+      // If there is a battle
 
+      // 1) Combine cards in play
+      const cardsWinOnBattlePlayer1 = deckBattlePlayer1.map((cardWinDeck1) => cardWinDeck1);
       const cardsWinOnBattlePlayer2 = deckBattlePlayer2.map((cardWinDeck2) => cardWinDeck2);
       const cardsWinOnBattleArrayConcat = [];
       cardsWinOnBattleArrayConcat.push(...cardsWinOnBattlePlayer1, ...cardsWinOnBattlePlayer2);
-      
-    console.log('cardsWinOnBattleArrayConcat', cardsWinOnBattleArrayConcat);
 
+      // 2) Prepare cards thaht will return to the winning deck
       const cardsWinOnBattlePlayer1GoToDeck = [];
       cardsWinOnBattlePlayer1.map((card) => {
         card.forEach((c) => cardsWinOnBattlePlayer1GoToDeck.push(c));
        });
-      console.log('cardsWinOnBattlePlayer1GoToDeck', cardsWinOnBattlePlayer1GoToDeck);
 
       const cardsWinOnBattlePlayer2GoToDeck = [];
       cardsWinOnBattlePlayer2.map((card) => {
         card.forEach((c) => cardsWinOnBattlePlayer2GoToDeck.push(c));
        });
 
+       // 3) Prepare hidden cards to be shown
       const cardsWinOnBattleArray = [];
       cardsWinOnBattleArrayConcat.map((card) => {
         card.forEach((c) => cardsWinOnBattleArray.push(c));
@@ -242,12 +275,13 @@ function App() {
         };
       };
       setCardsWinOnBattleToShow(cardsWinOnBattleToShowOddIndex);
-      console.log('cardsWinOnBattleToShow', cardsWinOnBattleToShow);
-      console.log('cardsWinOnBattleArray', cardsWinOnBattleArray);
+
+      // If there is no battle
       if (cardsWinOnBattleArray.length === 0) {
         setDeckPlayer1([...deckPlayer1, deckOnGamePlayer1[0], deckOnGamePlayer2[0]]);
+
+      // Or if there is battle, cards won return to the winning deck in the good order
       } else {
-        //const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
         setDeckPlayer1([...deckPlayer1, ...cardsWinOnBattlePlayer1GoToDeck , deckOnGamePlayer1[0], ...cardsWinOnBattlePlayer2GoToDeck, deckOnGamePlayer2[0]]);
       };
       setDeckBattlePlayer1([]);
@@ -255,38 +289,36 @@ function App() {
       setDeckOnGamePlayer1([]);
       setDeckOnGamePlayer2([]);
       onRoundWinPlayer1();
+
+    // If Player2 wins the round
     } else if (deckOnGamePlayer1[0].value < deckOnGamePlayer2[0].value) {
       setIsBattlePlayer1(false);
       setIsBattlePlayer2(false);
-      const cardsWinOnBattlePlayer1 = deckBattlePlayer1.map((cardWinDeck1) => cardWinDeck1);
-    console.log('cardsWinOnBattlePlayer1', cardsWinOnBattlePlayer1);
 
+      // If there is a battle
+
+      // 1) Combine cards in play
+      const cardsWinOnBattlePlayer1 = deckBattlePlayer1.map((cardWinDeck1) => cardWinDeck1);
       const cardsWinOnBattlePlayer2 = deckBattlePlayer2.map((cardWinDeck2) => cardWinDeck2);
       const cardsWinOnBattleArrayConcat = [];
       cardsWinOnBattleArrayConcat.push(...cardsWinOnBattlePlayer2, ...cardsWinOnBattlePlayer1);
 
-      console.log('cardsWinOnBattleArrayConcat', cardsWinOnBattleArrayConcat);
-
-
+      // 2) Prepare cards thaht will return to the winning deck
       const cardsWinOnBattlePlayer1GoToDeck = [];
       cardsWinOnBattlePlayer1.map((card) => {
         card.forEach((c) => cardsWinOnBattlePlayer1GoToDeck.push(c));
        });
-      console.log('cardsWinOnBattlePlayer1GoToDeck', cardsWinOnBattlePlayer1GoToDeck);
 
       const cardsWinOnBattlePlayer2GoToDeck = [];
       cardsWinOnBattlePlayer2.map((card) => {
         card.forEach((c) => cardsWinOnBattlePlayer2GoToDeck.push(c));
        });
 
+      // 3) Prepare hidden cards to be shown
       const cardsWinOnBattleArray = [];
       cardsWinOnBattleArrayConcat.map((card) => {
         card.forEach((c) => cardsWinOnBattleArray.push(c));
       });
-      
-      //cardsWinOnBattleArray.push(...cardsWinOnBattlePlayer2, ...cardsWinOnBattlePlayer1);
-
-      // Keep odd index to show hidden cards win on battle
       const cardsWinOnBattleToShowOddIndex = [];
       for (let i = 0; i < cardsWinOnBattleArray.length; i++) {
         if ((i % 2) == 1) {
@@ -294,10 +326,12 @@ function App() {
         };
       };
       setCardsWinOnBattleToShow(cardsWinOnBattleToShowOddIndex);
-      console.log('cardsWinOnBattleToShow', cardsWinOnBattleToShow);
-      console.log('cardsWinOnBattleArray', cardsWinOnBattleArray);
+
+      // If there is no battle
       if (cardsWinOnBattleArray.length === 0) {
         setDeckPlayer2([...deckPlayer2, deckOnGamePlayer2[0], deckOnGamePlayer1[0]]);
+
+      // Or if there is battle, cards won return to the winning deck in the good order
       } else {
         //const cardsWinBattleGoToDeck = cardsWinOnBattleArray.map((c) => c);
           setDeckPlayer2([...deckPlayer2, ...cardsWinOnBattlePlayer2GoToDeck, deckOnGamePlayer2[0], ...cardsWinOnBattlePlayer1GoToDeck, deckOnGamePlayer1[0]]);
@@ -307,10 +341,15 @@ function App() {
       setDeckOnGamePlayer1([]);
       setDeckOnGamePlayer2([]);
       onRoundWinPlayer2();
+
+    // When there is battle
     }  else if (deckOnGamePlayer1[0].value === deckOnGamePlayer2[0].value) {
+      // Check how many cards remain into deckPlayer1
       if (deckPlayer1Remaining === 0) {
         setGameOverPlayer1(true);
         winSound.play();
+
+      // Check how many cards remain into deckPlayer2
       } else if (deckPlayer2Remaining === 0) {
         setGameOverPlayer2(true);
         winSound.play();
@@ -325,29 +364,8 @@ function App() {
         console.log("battle");
       }
     }
-    //console.log("deck battle P1 et P2", deckBattlePlayer1, deckBattlePlayer2);
   };
   
-  const showRulesAgain = () => {
-    setShowRules(!showRules)
-  };
-
-  const showHome = () => {
-    setIsGameStarted(false);
-    setDeckId();
-    setDrawCardDeckPlayer1([]);
-    setDrawCardDeckPlayer2([]);
-    setShowRules(true);
-    setDeckBattlePlayer1([]);
-    setDeckBattlePlayer2([]);
-    setIsBattlePlayer1(false);
-    setIsBattlePlayer2(false);
-    setGameOverPlayer1(false);
-    setGameOverPlayer2(false);
-  }
-
-  //console.log("drawCardDeckPlayer1", drawCardDeckPlayer1);
-
   return (
     <div className="App">
       <div className={showRules ? "App-home" : "App-home-norules"}>
@@ -447,22 +465,19 @@ function App() {
             </div>
           </div>
           <div className={battle ? "App-area-battle" : "hidden"}>BATAILLE</div>
-          
-            <div className="App-area-battle-show">
-              <div className={disapearCardPlayer1 ? "App-area-battle-show-desc-disapear" : "App-area-battle-show-desc"}>
-                Cartes face cachée gagnées
-              </div>
-              {cardsWinOnBattleToShow.map((card) => (
-                <img
-                  key={card.id}
-                  src={card.image}
-                  alt={card.id}
-                  className={disapearCardPlayer1 ? "App-area-player2-game-play-img-disapear" : "App-area-player2-game-play-img"}
-                />
-              ))}
+          <div className="App-area-battle-show">
+            <div className={disapearCardPlayer1 ? "App-area-battle-show-desc-disapear" : "App-area-battle-show-desc"}>
+              Cartes face cachée gagnées
             </div>
-          
-            
+            {cardsWinOnBattleToShow.map((card) => (
+              <img
+                key={card.id}
+                src={card.image}
+                alt={card.id}
+                className={disapearCardPlayer1 ? "App-area-player2-game-play-img-disapear" : "App-area-player2-game-play-img"}
+              />
+            ))}
+          </div>
           {gameOverPlayer1 && (
             <div className="App-area-gameOver">
               <div className="App-area-gameOver-text">
