@@ -402,6 +402,10 @@
   transition-delay: 0.2s;
 }
 
+.activeSwipePlayer1 {
+  animation: swipePlayer1 0.2s;
+}
+
 .activeBackPlayer2 {
   transform: translateX(-180px) rotateY(90deg);
   transition: 0.2s;
@@ -411,6 +415,31 @@
   transform: translateX(0px) rotateY(0deg);
   transition: 0.2s;
   transition-delay: 0.2s;
+}
+.activeSwipePlayer2 {
+  animation: swipePlayer2 0.2s;
+}
+
+@keyframes swipePlayer1 {
+  0% {
+    transform: translateX(-360px);
+  }
+  100% {
+    transform: translateX(0px);
+    transition: 0.2s;
+    transition-delay: 0.2s;
+  }
+}
+
+@keyframes swipePlayer2 {
+  0% {
+    transform: translateX(360px);
+  }
+  100% {
+    transform: translateX(0px);
+    transition: 0.2s;
+    transition-delay: 0.2s;
+  }
 }
 
 @-webkit-keyframes circle {

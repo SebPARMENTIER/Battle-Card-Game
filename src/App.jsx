@@ -146,6 +146,7 @@ function App() {
       setGameOverPlayer2(true);
       winSound.play();
     };
+    setFlipCardPlayer1(false);
     setIsBattlePlayer1(true);
     setDrawCardDeckPlayer1([deckPlayer1[0]]);
     setDeckBattlePlayer1([...deckBattlePlayer1, deckOnGamePlayer1.splice(0, 1), deckPlayer1.splice(0, 1)]);
@@ -161,6 +162,7 @@ function App() {
       setGameOverPlayer1(true);
       winSound.play();
     };
+    setFlipCardPlayer2(false);
     setIsBattlePlayer2(true);
     setDrawCardDeckPlayer2([deckPlayer2[0]]);
     setDeckBattlePlayer2([...deckBattlePlayer2, deckOnGamePlayer2.splice(0, 1), deckPlayer2.splice(0, 1)]);
@@ -367,10 +369,6 @@ function App() {
         setGameOverPlayer2(true);
         winSound.play();
       } else {
-        setTimeout(() => {
-          setFlipCardPlayer1(false);
-          setFlipCardPlayer2(false);
-        }, 750);
         onBattle();
         setStartBattlePlayer1(true);
         setStartBattlePlayer2(true);
@@ -450,10 +448,16 @@ function App() {
             <div className="App-area-player1-game">
               <div className="App-area-player1-game-deck">
                 <div className="App-area-player1-game-deck-button">
-                  <div className={endOfDeckPlayer1 ? "App-area-player1-game-deck-button-back-empty" : "App-area-player1-game-deck-button-back"}></div>
+                  <button
+                    className={endOfDeckPlayer1 ? "App-area-player1-game-deck-button-back-empty" : "App-area-player1-game-deck-button-back"}
+                    onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
+                    disabled={startBattlePlayer1 ? false : (isBattlePlayer1 ? false : true)}
+                    aria-label="start-game"
+                  >
+                  </button>
                   <button
                     className={flipCardPlayer1 ? "App-area-player1-game-deck-button-draw activeBackPlayer1" : (gameOverPlayer1 ? "App-area-player1-game-deck-button-back-over" : "App-area-player1-game-deck-button-draw")}
-                    disabled={waitPlayer1 ? true : false}
+                    disabled={waitPlayer1 ? true : (flipCardPlayer1 ? true : false)}
                     onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
                     aria-label="start-game"
                   >
@@ -468,7 +472,7 @@ function App() {
                   </div>
                 )}
               </div>
-              <div className={isBattlePlayer1 ? "App-area-player1-game-deck-button-draw" : (flipCardPlayer1 ? "App-area-player1-game-play activeFrontPlayer1" : "App-area-player1-game-play")}>
+              <div className={isBattlePlayer1 ? "App-area-player1-game-deck-button-draw activeSwipePlayer1" : (flipCardPlayer1 ? "App-area-player1-game-play activeFrontPlayer1" : "App-area-player1-game-play")}>
                 {drawCardDeckPlayer1.map((c) => (
                   <img
                     key={c.id}
@@ -529,7 +533,7 @@ function App() {
           <div className="App-area-player2">
             <div className="App-area-player2-name">Player 2</div>
             <div className="App-area-player2-game">
-              <div className={isBattlePlayer2 ? "App-area-player2-game-deck-button-draw" : (flipCardPlayer2 ? "App-area-player2-game-play activeFrontPlayer2" : "App-area-player2-game-play")}>
+              <div className={isBattlePlayer2 ? "App-area-player2-game-deck-button-draw activeSwipePlayer2" : (flipCardPlayer2 ? "App-area-player2-game-play activeFrontPlayer2" : "App-area-player2-game-play")}>
                 {drawCardDeckPlayer2.map((c) => (
                   <img
                     key={c.id}
@@ -541,10 +545,16 @@ function App() {
               </div>
               <div className="App-area-player2-game-deck">
                 <div className="App-area-player2-game-deck-button">
-                <div className={endOfDeckPlayer2 ? "App-area-player2-game-deck-button-back-empty" : "App-area-player2-game-deck-button-back"}></div>
+                  <button
+                    className={endOfDeckPlayer2 ? "App-area-player2-game-deck-button-back-empty" : "App-area-player2-game-deck-button-back"}
+                    onClick={startBattlePlayer2 ? drawBattleCardPlayer2 : drawCardPlayer2}
+                    disabled={startBattlePlayer2 ? false : (isBattlePlayer2 ? false : true)}
+                    aria-label="start-game"
+                  >
+                  </button>
                   <button
                     className={flipCardPlayer2 ? "App-area-player2-game-deck-button-draw activeBackPlayer2" : (gameOverPlayer2 ? "App-area-player2-game-deck-button-back-over" : "App-area-player2-game-deck-button-draw")}
-                    disabled={waitPlayer2 ? true : false}
+                    disabled={waitPlayer2 ? true : (flipCardPlayer2 ? true : false)}
                     onClick={startBattlePlayer2 ? drawBattleCardPlayer2 : drawCardPlayer2}
                     aria-label="start-game"
                   >
