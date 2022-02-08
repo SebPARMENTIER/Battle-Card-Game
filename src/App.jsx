@@ -185,10 +185,12 @@ function App() {
   const onShowCards = () => {
     setTimeout(() => {
       setShowCards(true);
-    }, 1250);
+      setDisapearCardPlayer1(false);
+    }, 750);
     setTimeout(() => {
       setShowCards(false);
-    }, 2000);
+      setDisapearCardPlayer1(true);
+    }, 2500);
   };
   
   // Animations when Player 1 wins
@@ -457,7 +459,7 @@ function App() {
                   </button>
                   <button
                     className={flipCardPlayer1 ? "App-area-player1-game-deck-button-draw activeBackPlayer1" : (gameOverPlayer1 ? "App-area-player1-game-deck-button-back-over" : "App-area-player1-game-deck-button-draw")}
-                    disabled={waitPlayer1 ? true : (flipCardPlayer1 ? true : false)}
+                    disabled={waitPlayer1 ? true : (showCards ? true : (flipCardPlayer1 ? true : false))}
                     onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
                     aria-label="start-game"
                   >
@@ -497,7 +499,7 @@ function App() {
                       key={card.id}
                       src={card.image}
                       alt={card.id}
-                      className={disapearCardPlayer1 ? "App-area-player2-game-play-img-disapear" : "App-area-player2-game-play-img"}
+                      className={disapearCardPlayer1 ? "App-area-player1-game-play-img-disapear" : "App-area-player1-game-play-img"}
                     />
                   ))}
                 </div>
@@ -554,7 +556,7 @@ function App() {
                   </button>
                   <button
                     className={flipCardPlayer2 ? "App-area-player2-game-deck-button-draw activeBackPlayer2" : (gameOverPlayer2 ? "App-area-player2-game-deck-button-back-over" : "App-area-player2-game-deck-button-draw")}
-                    disabled={waitPlayer2 ? true : (flipCardPlayer2 ? true : false)}
+                    disabled={waitPlayer2 ? true : (showCards ? true : (flipCardPlayer2 ? true : false))}
                     onClick={startBattlePlayer2 ? drawBattleCardPlayer2 : drawCardPlayer2}
                     aria-label="start-game"
                   >
