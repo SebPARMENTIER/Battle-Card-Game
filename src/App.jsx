@@ -122,7 +122,7 @@ function App() {
     drawSound.play();
     if (deckPlayer1Remaining === 1) {
       setEndOfDeckPlayer1(true);
-    }
+    };
   };
 
   // Draw a card from deck player 2
@@ -137,7 +137,7 @@ function App() {
     drawSound.play();
     if (deckPlayer2Remaining === 1) {
       setEndOfDeckPlayer2(true);
-    }
+    };
   };
 
   // Draw a card from deck player 1 when there is battle
@@ -154,6 +154,9 @@ function App() {
     setWaitPlayer1(false);
     setStartBattlePlayer1(false);
     drawSound.play();
+    if (deckPlayer1Remaining === 1) {
+      setEndOfDeckPlayer1(true);
+    }
   };
 
   // Draw a card from deck player 2 when there is battle
@@ -170,6 +173,9 @@ function App() {
     setWaitPlayer2(false);
     setStartBattlePlayer2(false);
     drawSound.play();
+    if (deckPlayer2Remaining === 1) {
+      setEndOfDeckPlayer2(true);
+    }
   };
 
   // Animations when there is battle
@@ -188,8 +194,10 @@ function App() {
       setDisapearCardPlayer1(false);
     }, 750);
     setTimeout(() => {
-      setShowCards(false);
       setDisapearCardPlayer1(true);
+    }, 2000)
+    setTimeout(() => {
+      setShowCards(false);
     }, 2500);
   };
   
@@ -450,6 +458,7 @@ function App() {
             <div className="App-area-player1-game">
               <div className="App-area-player1-game-deck">
                 <div className="App-area-player1-game-deck-button">
+                <div className={endOfDeckPlayer1 ? "App-area-player1-game-deck-ghost" : "App-area-player1-game-deck-ghost-none"}></div>
                   <button
                     className={endOfDeckPlayer1 ? "App-area-player1-game-deck-button-back-empty" : "App-area-player1-game-deck-button-back"}
                     onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
@@ -458,9 +467,9 @@ function App() {
                   >
                   </button>
                   <button
-                    className={flipCardPlayer1 ? "App-area-player1-game-deck-button-draw activeBackPlayer1" : (gameOverPlayer1 ? "App-area-player1-game-deck-button-back-over" : "App-area-player1-game-deck-button-draw")}
-                    disabled={waitPlayer1 ? true : (showCards ? true : (flipCardPlayer1 ? true : false))}
+                    className={endOfDeckPlayer1 ? "App-area-player1-game-deck-button-back-empty" : (flipCardPlayer1 ? "App-area-player1-game-deck-button-draw activeBackPlayer1" : (gameOverPlayer1 ? "App-area-player1-game-deck-button-back-over" : "App-area-player1-game-deck-button-draw"))}
                     onClick={startBattlePlayer1 ? drawBattleCardPlayer1 : drawCardPlayer1}
+                    disabled={waitPlayer1 ? true : (showCards ? true : (flipCardPlayer1 ? true : false))}
                     aria-label="start-game"
                   >
                   </button>
@@ -547,6 +556,7 @@ function App() {
               </div>
               <div className="App-area-player2-game-deck">
                 <div className="App-area-player2-game-deck-button">
+                  <div className={endOfDeckPlayer2 ? "App-area-player2-game-deck-ghost" : "App-area-player2-game-deck-ghost-none"}></div>
                   <button
                     className={endOfDeckPlayer2 ? "App-area-player2-game-deck-button-back-empty" : "App-area-player2-game-deck-button-back"}
                     onClick={startBattlePlayer2 ? drawBattleCardPlayer2 : drawCardPlayer2}
@@ -555,9 +565,9 @@ function App() {
                   >
                   </button>
                   <button
-                    className={flipCardPlayer2 ? "App-area-player2-game-deck-button-draw activeBackPlayer2" : (gameOverPlayer2 ? "App-area-player2-game-deck-button-back-over" : "App-area-player2-game-deck-button-draw")}
-                    disabled={waitPlayer2 ? true : (showCards ? true : (flipCardPlayer2 ? true : false))}
+                    className={endOfDeckPlayer2 ? "App-area-player2-game-deck-button-back-empty" : (flipCardPlayer2 ? "App-area-player2-game-deck-button-draw activeBackPlayer2" : (gameOverPlayer2 ? "App-area-player2-game-deck-button-back-over" : "App-area-player2-game-deck-button-draw"))}
                     onClick={startBattlePlayer2 ? drawBattleCardPlayer2 : drawCardPlayer2}
+                    disabled={waitPlayer2 ? true : (showCards ? true : (flipCardPlayer2 ? true : false))}
                     aria-label="start-game"
                   >
                   </button>

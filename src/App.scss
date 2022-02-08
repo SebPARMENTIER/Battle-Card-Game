@@ -117,6 +117,17 @@
 
         &-deck {
 
+          &-ghost {
+            width: 226px;
+            height: 315.5px;
+            position: relative;
+            z-index: 1;
+
+            &-none {
+              display: none;
+            }
+          }
+
           &-button {
             position: relative;
 
@@ -314,6 +325,17 @@
         }
       
         &-deck {
+
+          &-ghost {
+            width: 226px;
+            height: 315.5px;
+            position: relative;
+            z-index: 1;
+
+            &-none {
+              display: none;
+            }
+          }
 
           &-button {
             position: relative;
