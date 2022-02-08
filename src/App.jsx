@@ -76,6 +76,8 @@ function App() {
     fisherYatesShuffle(cards);
     setDeckPlayer1(deck.slice(0, 26));
     setDeckPlayer2(deck.slice(26, 52));
+    setDeckPlayer1Remaining(deckPlayer1.length);
+    setDeckPlayer2Remaining(deckPlayer2.length);
   };
 
   // Show or hide rules
@@ -86,6 +88,8 @@ function App() {
   // Go to home to start a new game
   const showHome = () => {
     setDeck(cards);
+    setDeckPlayer1(cards.slice(0, 26));
+    setDeckPlayer2(cards.slice(26, 52));
     setDrawCardDeckPlayer1([]);
     setDrawCardDeckPlayer2([]);
     setDeckOnGamePlayer1([]);
