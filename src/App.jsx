@@ -67,7 +67,7 @@ function App() {
       let j = Math.floor( Math.random() * (i + 1)); //random index
       [array[i], array[j]] = [array[j], array[i]]; // swap
     };
-  }
+  };
 
   // Start game
   const startGame = () => {
@@ -80,23 +80,40 @@ function App() {
 
   // Show or hide rules
   const showRulesAgain = () => {
-    setShowRules(!showRules)
+    setShowRules(!showRules);
   };
 
   // Go to home to start a new game
   const showHome = () => {
-    setIsGameStarted(false);
     setDeck(cards);
     setDrawCardDeckPlayer1([]);
     setDrawCardDeckPlayer2([]);
-    setShowRules(true);
+    setDeckOnGamePlayer1([]);
+    setDeckOnGamePlayer2([]);
     setDeckBattlePlayer1([]);
     setDeckBattlePlayer2([]);
+    setCardsWinOnBattleToShow([]);
+    setIsGameStarted(false);
+    setShowRules(true);
+    setBattle(false);
+    setShowCards(false);
+    setWaitPlayer1(false);
+    setWaitPlayer2(false);
+    setStartBattlePlayer1(false);
+    setStartBattlePlayer2(false);
     setIsBattlePlayer1(false);
     setIsBattlePlayer2(false);
+    setFlipCardPlayer1(false);
+    setFlipCardPlayer2(false);
+    setRoundWinnerPlayer1(false);
+    setRoundWinnerPlayer2(false);
+    setDisapearCardPlayer1(false);
+    setDisapearCardPlayer2(false);
+    setEndOfDeckPlayer1(false);
+    setEndOfDeckPlayer2(false);
     setGameOverPlayer1(false);
     setGameOverPlayer2(false);
-  }
+  };
 
   // Show cards remaining from deckPlayer 1
   useEffect(() => {
@@ -156,7 +173,7 @@ function App() {
     drawSound.play();
     if (deckPlayer1Remaining === 1) {
       setEndOfDeckPlayer1(true);
-    }
+    };
   };
 
   // Draw a card from deck player 2 when there is battle
@@ -175,7 +192,7 @@ function App() {
     drawSound.play();
     if (deckPlayer2Remaining === 1) {
       setEndOfDeckPlayer2(true);
-    }
+    };
   };
 
   // Animations when there is battle
@@ -195,7 +212,7 @@ function App() {
     }, 750);
     setTimeout(() => {
       setDisapearCardPlayer1(true);
-    }, 2000)
+    }, 2000);
     setTimeout(() => {
       setShowCards(false);
     }, 2500);
