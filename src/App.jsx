@@ -505,7 +505,6 @@ function App() {
                     src={c.image}
                     alt={c.id}
                     className={isBattlePlayer1 ? "hidden" : (disapearCardPlayer1 ? "App-area-player1-game-play-img-disapear" : "App-area-player1-game-play-img")}
-                    //machin truc
                   />
                 ))}
               </div>
