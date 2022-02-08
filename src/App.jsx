@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import './App.scss';
-import cards from './assets/data/cards'
+import cards from './assets/data/cards';
 import drawAudio from './assets/sounds/draw.mp3';
 import battleAudio from './assets/sounds/battle.mp3';
 import winAudio from './assets/sounds/win.mp3';
