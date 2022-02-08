@@ -434,12 +434,6 @@ function App() {
             >
               Nouvelle partie
             </button>
-            <button
-              className="App-home-options-showrules-button"
-              onClick={onBattle}
-            >
-              BATAILLE
-            </button>
           </div>
         </div>
         )}
