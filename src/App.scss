@@ -510,7 +510,7 @@
 	}
 }
 
-@media (max-width: 768px) {
+@media only screen and (max-width: 768px) {
   .App {
   
     &-home {
@@ -575,7 +575,7 @@
             &-ghost {
               width: 75px;
               height: 105px;
-              border-radius: 10px;
+              border-radius: 5px;
             }
 
             &-button {
@@ -583,19 +583,19 @@
               &-back {
                 width: 75px;
                 height: 105px;
-                border-radius: 10px;
+                border-radius: 5px;
 
                 &-over {
                   width: 75px;
                   height: 105px;
-                  border-radius: 10px;
+                  border-radius: 5px;
                 }
               }
 
               &-draw {
                 width: 75px;
                 height: 105px;
-                border-radius: 10px;
+                border-radius: 5px;
                 
                 &:hover {
                   cursor: none;
@@ -607,7 +607,7 @@
               height: 3em;
 
               &-text {
-                font-size: 0.7em;
+                font-size: 0.6em;
               }
             }
           }
@@ -615,13 +615,16 @@
           &-play {
             width: 75px;
             height: 105px;
-            border-radius: 10px;
+            border-radius: 5px;
             transform: translateX(-60px) rotateY(90deg);
 
             &-img {
               width: 75px;
               height: 105px;
-              border-radius: 10px;
+
+              &-disapear {
+                animation: scale-display 0.5s;
+              }
             }
           }
         }
@@ -629,6 +632,16 @@
 
       &-battle {
       font-size: 2.5em;
+
+        &-show {
+          
+          &-all {
+            
+            &-desc {
+              font-size: 1em;
+            }
+          }
+        }
       }
 
       &-player2 {
@@ -644,7 +657,7 @@
             &-ghost {
               width: 75px;
               height: 105px;
-              border-radius: 10px;
+              border-radius: 5px;
             }
 
             &-button {
@@ -652,19 +665,19 @@
               &-back {
                 width: 75px;
                 height: 105px;
-                border-radius: 10px;
+                border-radius: 5px;
 
                 &-over {
                   width: 75px;
                   height: 105px;
-                  border-radius: 10px;
+                  border-radius: 5px;
                 }
               }
 
               &-draw {
                 width: 75px;
                 height: 105px;
-                border-radius: 10px;
+                border-radius: 5px;
                
                 &:hover {
                   cursor: none;
@@ -676,7 +689,7 @@
               height: 3em;
 
               &-text {
-                font-size: 0.7em;
+                font-size: 0.6em;
               }
             }
           }
@@ -684,13 +697,16 @@
           &-play {
             width: 75px;
             height: 105px;
-            border-radius: 10px;
+            border-radius: 5px;
             transform: translateX(60px) rotateY(90deg);
 
             &-img {
               width: 75px;
               height: 105px;
-              border-radius: 10px;
+
+              &-disapear {
+                animation: scale-display 0.5s;
+              }
             }
           }
         }
@@ -703,7 +719,7 @@
   }
 
   .activeBackPlayer1 {
-    transform: translateX(60px) rotateY(90deg);
+    transform: translateX(10px) rotateY(90deg);
     transition: 0.2s;
   }
   
@@ -718,7 +734,7 @@
   }
 
   .activeBackPlayer2 {
-    transform: translateX(-60px) rotateY(90deg);
+    transform: translateX(-10px) rotateY(90deg);
     transition: 0.2s;
   }
   
@@ -729,5 +745,24 @@
   }
   .activeSwipePlayer2 {
     animation: swipePlayer2 0.2s;
+  }
+
+  @keyframes scale-display {
+    0% {
+      opacity: 1;
+      transform: scale(1);
+      -webkit-transform: scale(1);
+    }
+    99% {
+      opacity: 0;
+      transform: scale(0);
+      -webkit-transform: scale(0);
+    }
+    100% {
+      display: none;
+      opacity: 0;
+      transform: scale(0);
+      -webkit-transform: scale(0);
+    }
   }
 }
