@@ -408,9 +408,6 @@ function App() {
     }
   };
 
-  console.log('deckPlayer1', deckPlayer1);
-  console.log('deckPlayer2', deckPlayer2);
-  
   return (
     <div className="App">
       <div className={showRules ? "App-home" : "App-home-norules"}>
