@@ -623,6 +623,8 @@
               height: 105px;
 
               &-disapear {
+                width: 75px;
+                height: 105px;
                 animation: scale-display 0.5s;
               }
             }
@@ -634,12 +636,35 @@
       font-size: 2.5em;
 
         &-show {
+          width: 80%;
+          transform: translate(-50%, -50%) scale(0.8);
           
           &-all {
+            width: 100%;
+
+            &-cards {
+              transform: scale(0.8);
+            }
             
             &-desc {
-              font-size: 1em;
+              font-size: 0.8em;
             }
+          }
+        }
+      }
+
+      &-gameOver {
+        padding: 5em 0.3em;
+  
+        &-text {
+          font-size: 1.8em;
+        }
+        
+        &-button {
+    
+          &:hover {
+            cursor: none;
+            text-decoration: none;
           }
         }
       }
@@ -705,6 +730,8 @@
               height: 105px;
 
               &-disapear {
+                width: 75px;
+                height: 105px;
                 animation: scale-display 0.5s;
               }
             }
@@ -745,24 +772,5 @@
   }
   .activeSwipePlayer2 {
     animation: swipePlayer2 0.2s;
-  }
-
-  @keyframes scale-display {
-    0% {
-      opacity: 1;
-      transform: scale(1);
-      -webkit-transform: scale(1);
-    }
-    99% {
-      opacity: 0;
-      transform: scale(0);
-      -webkit-transform: scale(0);
-    }
-    100% {
-      display: none;
-      opacity: 0;
-      transform: scale(0);
-      -webkit-transform: scale(0);
-    }
   }
 }
