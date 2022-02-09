@@ -133,6 +133,10 @@ function App() {
 
   // Draw a card from deck player 1
   const drawCardPlayer1 = () => {
+    if (deckPlayer2Remaining === 0) {
+      setGameOverPlayer2(true);
+      winSound.play();
+    };
     setDisapearCardPlayer1(false);
     setDrawCardDeckPlayer1([deckPlayer1[0]]);
     setDeckOnGamePlayer1(deckPlayer1.splice(0, 1));
@@ -148,6 +152,10 @@ function App() {
 
   // Draw a card from deck player 2
   const drawCardPlayer2 = () => {
+    if (deckPlayer1Remaining === 0) {
+      setGameOverPlayer1(true);
+      winSound.play();
+    };
     setDisapearCardPlayer2(false);
     setDrawCardDeckPlayer2([deckPlayer2[0]]);
     setDeckOnGamePlayer2(deckPlayer2.splice(0, 1));
