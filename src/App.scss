@@ -509,3 +509,198 @@
 		-webkit-transform: scale(0);
 	}
 }
+
+@media (max-width: 576px) {
+  .App {
+  
+    &-home {
+  
+      &-header {
+        font-size: 3em;
+        margin: 0;
+      }
+  
+      &-options {
+  
+        &-showrules {
+  
+          &-button {
+            margin-right: 0.5em;
+      
+            &:hover {
+              cursor: none;
+              text-decoration: none;
+            }
+          }
+        }
+      }
+  
+      &-rules {
+  
+        &-header {
+          font-size: 1.5em;
+        }
+  
+        &-desc {
+          font-size: 0.8em;
+        }
+      }
+  
+      &-button {
+        font-size: 2em;
+        background-size: auto;
+        background-image: lime;
+        transition: none;
+  
+        &:hover {
+          background-position: none;
+          cursor: none;
+        }
+      }
+    }
+  
+
+    &-area {
+      
+      &-player1 {
+        
+        &-name {
+          font-size: 2em;
+        }
+
+        &-game {
+          
+          &-deck {
+
+            &-ghost {
+              width: 113px;
+              height: 157.75px;
+            }
+
+            &-button {
+
+              &-back {
+                width: 113px;
+                height: 157px;
+
+                &-over {
+                  width: 113px;
+                  height: 157px;
+                }
+              }
+
+              &-draw {
+                width: 113px;
+                height: 157px;
+                
+                &:hover {
+                  cursor: none;
+                }
+              }
+            }
+
+            &-count {
+              height: 3em;
+            }
+          }
+
+          &-play {
+            width: 113px;
+            height: 157px;
+            transform: translateX(-90px) rotateY(90deg);
+
+            &-img {
+              width: 113px;
+              height: 157px;
+            }
+          }
+        }
+      }
+
+      &-player2 {
+        
+
+        &-name {
+          font-size: 2em;
+        }
+
+        &-game {
+
+          &-deck {
+
+            &-ghost {
+              width: 113px;
+              height: 157.75px;
+            }
+
+            &-button {
+
+              &-back {
+                width: 113px;
+                height: 157px;
+
+                &-over {
+                  width: 113px;
+                  height: 157px;
+                }
+              }
+
+              &-draw {
+                width: 113px;
+                height: 157px;
+               
+                &:hover {
+                  cursor: none;
+                }
+              }
+            }
+
+            &-count {
+              height: 3em;
+            }
+          }
+
+          &-play {
+            width: 113px;
+            height: 157px;
+            transform: translateX(90px) rotateY(90deg);
+
+            &-img {
+              width: 113px;
+              height: 157px;
+            }
+          }
+        }
+      }
+    }
+  }
+
+  .activeBackPlayer1 {
+    transform: translateX(90px) rotateY(90deg);
+    transition: 0.2s;
+  }
+  
+  .activeFrontPlayer1 {
+    transform: translateX(0px) rotateY(0deg);
+    transition: 0.2s;
+    transition-delay: 0.2s;
+  }
+  
+  .activeSwipePlayer1 {
+    animation: swipePlayer1 0.2s;
+  }
+
+  .activeBackPlayer2 {
+    transform: translateX(-90px) rotateY(90deg);
+    transition: 0.2s;
+  }
+  
+  .activeFrontPlayer2 {
+    transform: translateX(0px) rotateY(0deg);
+    transition: 0.2s;
+    transition-delay: 0.2s;
+  }
+  .activeSwipePlayer2 {
+    animation: swipePlayer2 0.2s;
+  }
+}

@@ -403,7 +403,6 @@ function App() {
         onBattle();
         setStartBattlePlayer1(true);
         setStartBattlePlayer2(true);
-        console.log("battle");
       }
     }
   };
