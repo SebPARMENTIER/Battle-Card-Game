@@ -221,13 +221,13 @@ function App() {
     setTimeout(() => {
       setShowCards(true);
       setDisapearCardPlayer1(false);
-    }, 750);
+    }, 1250);
     setTimeout(() => {
       setDisapearCardPlayer1(true);
-    }, 2000);
+    }, 2500);
     setTimeout(() => {
       setShowCards(false);
-    }, 2500);
+    }, 3000);
   };
   
   // Animations when Player 1 wins
@@ -235,7 +235,7 @@ function App() {
     setTimeout(() => {
       setDisapearCardPlayer1(true);
       setDisapearCardPlayer2(true);
-    }, 500);
+    }, 1000);
     setTimeout(() => {
       if (deckPlayer1Remaining !== 0 || deckPlayer2Remaining !== 0) {
         setEndOfDeckPlayer1(false);
@@ -248,14 +248,14 @@ function App() {
       setRoundWinnerPlayer1(true);
       setDrawCardDeckPlayer1([]);
       setDrawCardDeckPlayer2([]);
-    }, 750);
+    }, 1250);
     setTimeout(() => {
       setFlipCardPlayer1(false);
       setFlipCardPlayer2(false);
-    }, 800);
+    }, 1300);
     setTimeout(() => {
       setRoundWinnerPlayer1(false);
-    }, 1250);
+    }, 1750);
   };
 
   // Animations when Player 2 wins
@@ -263,7 +263,7 @@ function App() {
     setTimeout(() => {
       setDisapearCardPlayer1(true);
       setDisapearCardPlayer2(true);
-    }, 500);
+    }, 1000);
     setTimeout(() => {
       if (deckPlayer2Remaining !== 0 || deckPlayer1Remaining !== 0) {
         setEndOfDeckPlayer1(false);
@@ -276,14 +276,14 @@ function App() {
       setRoundWinnerPlayer2(true);
       setDrawCardDeckPlayer1([]);
       setDrawCardDeckPlayer2([]);
-    }, 750);
+    }, 1250);
     setTimeout(() => {
       setFlipCardPlayer1(false);
       setFlipCardPlayer2(false);
-    }, 800);
+    }, 1300);
     setTimeout(() => {
       setRoundWinnerPlayer2(false);
-    }, 1250);
+    }, 1750);
   };
 
   // Game functions
