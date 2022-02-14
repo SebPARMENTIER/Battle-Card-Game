@@ -142,10 +142,12 @@ function App() {
   // Draw a card from deck player 1
   const drawCardPlayer1 = () => {
     if (deckPlayer2Remaining === 0) {
-      setGameOverPlayer2(true);
-      if (!noSound) {
-        winSound.play();
-      };
+      setTimeout(() => {
+        setGameOverPlayer2(true);
+        if (!noSound) {
+          winSound.play();
+        };
+      }, 1250);
     };
     setDisapearCardPlayer1(false);
     setDrawCardDeckPlayer1([deckPlayer1[0]]);
@@ -165,10 +167,12 @@ function App() {
   // Draw a card from deck player 2
   const drawCardPlayer2 = () => {
     if (deckPlayer1Remaining === 0) {
-      setGameOverPlayer1(true);
-      if (!noSound) {
-        winSound.play();
-      };
+      setTimeout(() => {
+        setGameOverPlayer1(true);
+        if (!noSound) {
+          winSound.play();
+        };
+      }, 1250);
     };
     setDisapearCardPlayer2(false);
     setDrawCardDeckPlayer2([deckPlayer2[0]]);
@@ -187,11 +191,13 @@ function App() {
 
   // Draw a card from deck player 1 when there is battle
   const drawBattleCardPlayer1 = () => {
-    if (deckPlayer2Remaining === 0) {
-      setGameOverPlayer2(true);
-      if (!noSound) {
-        winSound.play();
-      };
+    if (deckPlayer2Remaining > 1) {
+      setTimeout(() => {
+        setGameOverPlayer2(true);
+        if (!noSound) {
+          winSound.play();
+        };
+      }, 1250);
     };
     setFlipCardPlayer1(false);
     setIsBattlePlayer1(true);
@@ -210,11 +216,13 @@ function App() {
 
   // Draw a card from deck player 2 when there is battle
   const drawBattleCardPlayer2 = () => {
-    if (deckPlayer1Remaining === 0) {
-      setGameOverPlayer1(true);
-      if (!noSound) {
-        winSound.play();
-      };
+    if (deckPlayer1Remaining > 1) {
+      setTimeout(() => {
+        setGameOverPlayer1(true);
+        if (!noSound) {
+          winSound.play();
+        };
+      }, 1250);
     };
     setFlipCardPlayer2(false);
     setIsBattlePlayer2(true);
@@ -371,7 +379,9 @@ function App() {
       setDeckBattlePlayer2([]);
       setDeckOnGamePlayer1([]);
       setDeckOnGamePlayer2([]);
-      onRoundWinPlayer1();
+      setTimeout(() => {
+        onRoundWinPlayer1();
+      }, 1750);
 
     // If Player2 wins the round
     } else if (deckOnGamePlayer1[0].value < deckOnGamePlayer2[0].value) {
@@ -424,30 +434,41 @@ function App() {
       setDeckBattlePlayer2([]);
       setDeckOnGamePlayer1([]);
       setDeckOnGamePlayer2([]);
-      onRoundWinPlayer2();
+      setTimeout(() => {
+        onRoundWinPlayer2();
+      }, 1750);
 
     // When there is battle
     }  else if (deckOnGamePlayer1[0].value === deckOnGamePlayer2[0].value) {
+      onBattle();
+
       // Check how many cards remain into deckPlayer1
       if (deckPlayer1Remaining === 0) {
-        setGameOverPlayer1(true);
-        if (!noSound) {
-          winSound.play();
-        };
+        setTimeout(() => {
+          setGameOverPlayer1(true);
+          if (!noSound) {
+            winSound.play();
+          };
+        }, 1750);
 
       // Check how many cards remain into deckPlayer2
       } else if (deckPlayer2Remaining === 0) {
-        setGameOverPlayer2(true);
-        if (!noSound) {
-          winSound.play();
-        };
+        setTimeout(() => {
+          setGameOverPlayer2(true);
+          if (!noSound) {
+            winSound.play();
+          };
+        }, 1750);
       } else {
-        onBattle();
         setStartBattlePlayer1(true);
         setStartBattlePlayer2(true);
       }
     }
   };
+
+  console.log(deckPlayer1);
+  console.log(deckPlayer2);
+
 
   return (
     <div className="App">
