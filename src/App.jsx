@@ -4,6 +4,8 @@ import cards from './assets/data/cards';
 import drawAudio from './assets/sounds/draw.mp3';
 import battleAudio from './assets/sounds/battle.mp3';
 import winAudio from './assets/sounds/win.mp3';
+import mute from '/images/mute.png';
+import volume from '/images/volume.png';
 
 function App() {
 
@@ -27,6 +29,7 @@ function App() {
 
   const [cardsWinOnBattleToShow, setCardsWinOnBattleToShow] = useState([]);
 
+  const [noSound, setNoSound] = useState(false);
   const [isGameStarted, setIsGameStarted] = useState(false);
   const [showRules, setShowRules] = useState(true);
   const [battle, setBattle] = useState(false);
@@ -60,6 +63,11 @@ function App() {
   const drawSound = new Audio(drawAudio);
   const battleSound = new Audio(battleAudio);
   const winSound = new Audio(winAudio);
+
+  // Turn sound On/Off
+  const soundMode = () => {
+    setNoSound(!noSound);
+  };
 
   // Shuffle cards array
   const fisherYatesShuffle = (array) => {
@@ -135,7 +143,9 @@ function App() {
   const drawCardPlayer1 = () => {
     if (deckPlayer2Remaining === 0) {
       setGameOverPlayer2(true);
-      winSound.play();
+      if (!noSound) {
+        winSound.play();
+      };
     };
     setDisapearCardPlayer1(false);
     setDrawCardDeckPlayer1([deckPlayer1[0]]);
@@ -144,7 +154,9 @@ function App() {
     setWaitPlayer1(true);
     setIsBattlePlayer1(false);
     setFlipCardPlayer1(true);
-    drawSound.play();
+    if (!noSound) {
+      drawSound.play();
+    };
     if (deckPlayer1Remaining === 1) {
       setEndOfDeckPlayer1(true);
     };
@@ -154,7 +166,9 @@ function App() {
   const drawCardPlayer2 = () => {
     if (deckPlayer1Remaining === 0) {
       setGameOverPlayer1(true);
-      winSound.play();
+      if (!noSound) {
+        winSound.play();
+      };
     };
     setDisapearCardPlayer2(false);
     setDrawCardDeckPlayer2([deckPlayer2[0]]);
@@ -163,7 +177,9 @@ function App() {
     setWaitPlayer2(true);
     setIsBattlePlayer2(false);
     setFlipCardPlayer2(true);
-    drawSound.play();
+    if (!noSound) {
+      drawSound.play();
+    };
     if (deckPlayer2Remaining === 1) {
       setEndOfDeckPlayer2(true);
     };
@@ -173,7 +189,9 @@ function App() {
   const drawBattleCardPlayer1 = () => {
     if (deckPlayer2Remaining === 0) {
       setGameOverPlayer2(true);
-      winSound.play();
+      if (!noSound) {
+        winSound.play();
+      };
     };
     setFlipCardPlayer1(false);
     setIsBattlePlayer1(true);
@@ -182,7 +200,9 @@ function App() {
     setDeckPlayer1Remaining(deckPlayer1.length);
     setWaitPlayer1(false);
     setStartBattlePlayer1(false);
-    drawSound.play();
+    if (!noSound) {
+      drawSound.play();
+    };
     if (deckPlayer1Remaining === 1) {
       setEndOfDeckPlayer1(true);
     };
@@ -192,7 +212,9 @@ function App() {
   const drawBattleCardPlayer2 = () => {
     if (deckPlayer1Remaining === 0) {
       setGameOverPlayer1(true);
-      winSound.play();
+      if (!noSound) {
+        winSound.play();
+      };
     };
     setFlipCardPlayer2(false);
     setIsBattlePlayer2(true);
@@ -201,7 +223,9 @@ function App() {
     setDeckPlayer2Remaining(deckPlayer2.length);
     setWaitPlayer2(false);
     setStartBattlePlayer2(false);
-    drawSound.play();
+    if (!noSound) {
+      drawSound.play();
+    };
     if (deckPlayer2Remaining === 1) {
       setEndOfDeckPlayer2(true);
     };
@@ -209,7 +233,9 @@ function App() {
 
   // Animations when there is battle
   const onBattle = () => {
-    battleSound.play();
+    if (!noSound) {
+      battleSound.play();
+    };
     setBattle(true);
     setTimeout(() => {
       setBattle(false)
@@ -243,7 +269,9 @@ function App() {
       };
       if (deckPlayer2Remaining === 0) {
         setGameOverPlayer2(true);
-        winSound.play();
+        if (!noSound) {
+          winSound.play();
+        };
       };
       setRoundWinnerPlayer1(true);
       setDrawCardDeckPlayer1([]);
@@ -271,7 +299,9 @@ function App() {
       };
       if (deckPlayer1Remaining === 0) {
         setGameOverPlayer1(true);
-        winSound.play();
+        if (!noSound) {
+          winSound.play();
+        };
       };
       setRoundWinnerPlayer2(true);
       setDrawCardDeckPlayer1([]);
@@ -401,12 +431,16 @@ function App() {
       // Check how many cards remain into deckPlayer1
       if (deckPlayer1Remaining === 0) {
         setGameOverPlayer1(true);
-        winSound.play();
+        if (!noSound) {
+          winSound.play();
+        };
 
       // Check how many cards remain into deckPlayer2
       } else if (deckPlayer2Remaining === 0) {
         setGameOverPlayer2(true);
-        winSound.play();
+        if (!noSound) {
+          winSound.play();
+        };
       } else {
         onBattle();
         setStartBattlePlayer1(true);
@@ -438,6 +472,32 @@ function App() {
             >
               Nouvelle partie
             </button>
+          </div>
+          <div className="App-home-options-volume">
+            {!noSound && (
+              <button
+                className="App-home-options-volume-button-on"
+                onClick={soundMode}
+              >
+                <img
+                  className='App-home-options-volume-button-on'
+                  src={volume}
+                  alt="volume"
+                />
+              </button>
+            )}
+            {noSound && (
+              <button
+                className="App-home-options-volume-button-off"
+                onClick={soundMode}
+              >
+                <img
+                  className='App-home-options-volume-button-off-img'
+                  src={mute}
+                  alt="volume muet"
+                />
+              </button>
+            )}
           </div>
         </div>
         )}

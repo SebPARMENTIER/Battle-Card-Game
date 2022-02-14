@@ -52,6 +52,23 @@
           }
         }
       }
+
+      &-volume {
+
+        &-button {
+
+          &-on, &-off {
+            border: none;
+            background-color: green;
+            color: white;
+      
+            &:hover {
+              cursor: pointer;
+              text-decoration: underline;
+            }
+          }
+        }
+      }
     }
 
     &-rules {
