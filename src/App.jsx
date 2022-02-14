@@ -10,8 +10,8 @@ function App() {
   // States
   const [deck, setDeck] = useState(cards);
 
-  const [deckPlayer1, setDeckPlayer1] = useState(cards.slice(0, 26));
-  const [deckPlayer2, setDeckPlayer2] = useState(cards.slice(26, 52));
+  const [deckPlayer1, setDeckPlayer1] = useState(cards.slice(0, 16));
+  const [deckPlayer2, setDeckPlayer2] = useState(cards.slice(16, 32));
 
   const [deckPlayer1Remaining, setDeckPlayer1Remaining] = useState(deckPlayer1.length);
   const [deckPlayer2Remaining, setDeckPlayer2Remaining] = useState(deckPlayer2.length);
@@ -74,8 +74,8 @@ function App() {
     setIsGameStarted(true);
     setShowRules(false);
     fisherYatesShuffle(cards);
-    setDeckPlayer1(deck.slice(0, 26));
-    setDeckPlayer2(deck.slice(26, 52));
+    setDeckPlayer1(deck.slice(0,16));
+    setDeckPlayer2(deck.slice(16, 32));
     setDeckPlayer1Remaining(deckPlayer1.length);
     setDeckPlayer2Remaining(deckPlayer2.length);
   };
@@ -88,8 +88,8 @@ function App() {
   // Go to home to start a new game
   const showHome = () => {
     setDeck(cards);
-    setDeckPlayer1(cards.slice(0, 26));
-    setDeckPlayer2(cards.slice(26, 52));
+    setDeckPlayer1(cards.slice(0, 16));
+    setDeckPlayer2(cards.slice(16, 32));
     setDrawCardDeckPlayer1([]);
     setDrawCardDeckPlayer2([]);
     setDeckOnGamePlayer1([]);
@@ -448,7 +448,7 @@ function App() {
             </div>
             <div className="App-home-rules-desc">
               <p className="App-home-rules-desc-text">
-                On distribue les 52 cartes aux joueurs (la bataille se joue généralement à deux) qui les rassemblent face cachée en paquet devant eux.
+                La bataille se joue généralement à deux. On distribue les 32 cartes aux joueurs qui les rassemblent face cachée en paquet devant eux.
               </p>
               <p className="App-home-rules-desc-text">
                 Chacun tire la carte du dessus de son paquet et la pose face visible sur la table.
