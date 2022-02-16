@@ -347,9 +347,7 @@ function App() {
       setDeckBattlePlayer2([]);
       setDeckOnGamePlayer1([]);
       setDeckOnGamePlayer2([]);
-      setTimeout(() => {
-        onRoundWinPlayer1();
-      }, 250);
+      onRoundWinPlayer1();
 
     // If Player2 wins the round
     } else if (deckOnGamePlayer1[0].value < deckOnGamePlayer2[0].value) {
@@ -402,9 +400,7 @@ function App() {
       setDeckBattlePlayer2([]);
       setDeckOnGamePlayer1([]);
       setDeckOnGamePlayer2([]);
-      setTimeout(() => {
-        onRoundWinPlayer2();
-      }, 250);
+      onRoundWinPlayer2();
 
     // When there is battle
     }  else if (deckOnGamePlayer1[0].value === deckOnGamePlayer2[0].value) {
@@ -453,10 +449,6 @@ function App() {
       };
     }, 1250);
   };
-
-  console.log(deckPlayer1);
-  console.log(deckPlayer2);
-
 
   return (
     <div className="App">
