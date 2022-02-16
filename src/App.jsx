@@ -141,14 +141,6 @@ function App() {
 
   // Draw a card from deck player 1
   const drawCardPlayer1 = () => {
-    if (deckPlayer2Remaining === 0) {
-      setTimeout(() => {
-        setGameOverPlayer2(true);
-        if (!noSound) {
-          winSound.play();
-        };
-      }, 1250);
-    };
     setDisapearCardPlayer1(false);
     setDrawCardDeckPlayer1([deckPlayer1[0]]);
     setDeckOnGamePlayer1(deckPlayer1.splice(0, 1));
@@ -166,14 +158,6 @@ function App() {
 
   // Draw a card from deck player 2
   const drawCardPlayer2 = () => {
-    if (deckPlayer1Remaining === 0) {
-      setTimeout(() => {
-        setGameOverPlayer1(true);
-        if (!noSound) {
-          winSound.play();
-        };
-      }, 1250);
-    };
     setDisapearCardPlayer2(false);
     setDrawCardDeckPlayer2([deckPlayer2[0]]);
     setDeckOnGamePlayer2(deckPlayer2.splice(0, 1));
@@ -191,14 +175,6 @@ function App() {
 
   // Draw a card from deck player 1 when there is battle
   const drawBattleCardPlayer1 = () => {
-    if (deckPlayer2Remaining > 1) {
-      setTimeout(() => {
-        setGameOverPlayer2(true);
-        if (!noSound) {
-          winSound.play();
-        };
-      }, 1250);
-    };
     setFlipCardPlayer1(false);
     setIsBattlePlayer1(true);
     setDrawCardDeckPlayer1([deckPlayer1[0]]);
@@ -216,14 +192,6 @@ function App() {
 
   // Draw a card from deck player 2 when there is battle
   const drawBattleCardPlayer2 = () => {
-    if (deckPlayer1Remaining > 1) {
-      setTimeout(() => {
-        setGameOverPlayer1(true);
-        if (!noSound) {
-          winSound.play();
-        };
-      }, 1250);
-    };
     setFlipCardPlayer2(false);
     setIsBattlePlayer2(true);
     setDrawCardDeckPlayer2([deckPlayer2[0]]);
@@ -381,7 +349,7 @@ function App() {
       setDeckOnGamePlayer2([]);
       setTimeout(() => {
         onRoundWinPlayer1();
-      }, 1750);
+      }, 250);
 
     // If Player2 wins the round
     } else if (deckOnGamePlayer1[0].value < deckOnGamePlayer2[0].value) {
@@ -436,7 +404,7 @@ function App() {
       setDeckOnGamePlayer2([]);
       setTimeout(() => {
         onRoundWinPlayer2();
-      }, 1750);
+      }, 250);
 
     // When there is battle
     }  else if (deckOnGamePlayer1[0].value === deckOnGamePlayer2[0].value) {
@@ -464,6 +432,26 @@ function App() {
         setStartBattlePlayer2(true);
       }
     }
+  };
+
+  // Set game over player 1 when there is batlle and no card left in deck player 1
+  if (deckPlayer1Remaining === 0 && isBattlePlayer1) {
+    setTimeout(() => {
+      setGameOverPlayer1(true);
+      if (!noSound) {
+        winSound.play();
+      };
+    }, 1250);
+  };
+
+  // Set game over player 2 when there is batlle and no card left in deck player 2
+  if (deckPlayer2Remaining === 0 && isBattlePlayer2) {
+    setTimeout(() => {
+      setGameOverPlayer2(true);
+      if (!noSound) {
+        winSound.play();
+      };
+    }, 1250);
   };
 
   console.log(deckPlayer1);
