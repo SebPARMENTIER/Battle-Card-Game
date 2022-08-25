@@ -2,7 +2,7 @@
   "name": "Battle Card Game",
   "short_name": "Battle",
   "description": "It is a battle card game",
-  "start_url": "/?source=pwa",
+  "start_url": "/",
   "display": "standalone",
   "theme_color": "green",
   "background_color": "green",
