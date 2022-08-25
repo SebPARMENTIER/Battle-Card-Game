@@ -2,7 +2,7 @@
   "name": "Battle Card Game",
   "short_name": "Battle",
   "description": "It is a battle card game",
-  "start_url": "https://www.seb-battle.netlify.app/",
+  "start_url": "https://www.seb-battle.netlify.app/?source=pwa",
   "display": "standalone",
   "theme_color": "green",
   "background_color": "green",
