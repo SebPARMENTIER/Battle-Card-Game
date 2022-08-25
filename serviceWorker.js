@@ -1,94 +1,151 @@
-const staticCacheName = "cache-v2";
-const assets = [
-  "/index.html",
-  "/src",
-  "/images/0C.png",
-  "/images/0D.png",
-  "/images/0H.png",
-  "/images/0S.png",
-  "/images/7C.png",
-  "/images/7D.png",
-  "/images/7H.png",
-  "/images/7S.png",
-  "/images/8C.png",
-  "/images/8D.png",
-  "/images/8H.png",
-  "/images/8S.png",
-  "/images/9C.png",
-  "/images/9D.png",
-  "/images/9H.png",
-  "/images/9S.png",
-  "/images/AC.png",
-  "/images/AD.png",
-  "/images/AH.png",
-  "/images/AS.png",
-  "/images/JC.png",
-  "/images/JD.png",
-  "/images/JH.png",
-  "/images/JS.png",
-  "/images/KC.png",
-  "/images/KD.png",
-  "/images/KH.png",
-  "/images/KS.png",
-  "/images/mute.png",
-  "/images/QC.png",
-  "/images/QD.png",
-  "/images/QH.png",
-  "/images/QS.png",
-  "/images/volume.png"
+const BASE = location.protocol + "//" + location.host;
+const PREFIX = "V1";
+const CACHED_FILES = [
+  // `${BASE}/src/main.jsx`,
+  // `${BASE}/src/App.jsx`,
+  // `${BASE}/src/App.scss`,
+  // `${BASE}/src/index.css`,
+  // `${BASE}/src/assets/data/cards.js`,
+  `${BASE}/src/assets/sounds/battle.mp3`,
+  `${BASE}/src/assets/sounds/draw.mp3`,
+  `${BASE}/src/assets/sounds/win.mp3`,
+  `${BASE}/images/0C.png`,
+  `${BASE}/images/0D.png`,
+  `${BASE}/images/0H.png`,
+  `${BASE}/images/0S.png`,
+  `${BASE}/images/7C.png`,
+  `${BASE}/images/7D.png`,
+  `${BASE}/images/7H.png`,
+  `${BASE}/images/7S.png`,
+  `${BASE}/images/8C.png`,
+  `${BASE}/images/8D.png`,
+  `${BASE}/images/8H.png`,
+  `${BASE}/images/8S.png`,
+  `${BASE}/images/9C.png`,
+  `${BASE}/images/9D.png`,
+  `${BASE}/images/9H.png`,
+  `${BASE}/images/9S.png`,
+  `${BASE}/images/AC.png`,
+  `${BASE}/images/AD.png`,
+  `${BASE}/images/AH.png`,
+  `${BASE}/images/AS.png`,
+  `${BASE}/images/JC.png`,
+  `${BASE}/images/JD.png`,
+  `${BASE}/images/JH.png`,
+  `${BASE}/images/JS.png`,
+  `${BASE}/images/KC.png`,
+  `${BASE}/images/KD.png`,
+  `${BASE}/images/KH.png`,
+  `${BASE}/images/KS.png`,
+  `${BASE}/images/QC.png`,
+  `${BASE}/images/QD.png`,
+  `${BASE}/images/QH.png`,
+  `${BASE}/images/QS.png`
+];
+const LAZY_CACHE = [
+  // `${BASE}/src/assets/data/card.js`,
+  // `${BASE}/images/0C.png`,
+  // `${BASE}/images/0D.png`,
+  // `${BASE}/images/0H.png`,
+  // `${BASE}/images/0S.png`,
+  // `${BASE}/images/7C.png`,
+  // `${BASE}/images/7D.png`,
+  // `${BASE}/images/7H.png`,
+  // `${BASE}/images/7S.png`,
+  // `${BASE}/images/8C.png`,
+  // `${BASE}/images/8D.png`,
+  // `${BASE}/images/8H.png`,
+  // `${BASE}/images/8S.png`,
+  // `${BASE}/images/9C.png`,
+  // `${BASE}/images/9D.png`,
+  // `${BASE}/images/9H.png`,
+  // `${BASE}/images/9S.png`,
+  // `${BASE}/images/AC.png`,
+  // `${BASE}/images/AD.png`,
+  // `${BASE}/images/AH.png`,
+  // `${BASE}/images/AS.png`,
+  // `${BASE}/images/JC.png`,
+  // `${BASE}/images/JD.png`,
+  // `${BASE}/images/JH.png`,
+  // `${BASE}/images/JS.png`,
+  // `${BASE}/images/KC.png`,
+  // `${BASE}/images/KD.png`,
+  // `${BASE}/images/KH.png`,
+  // `${BASE}/images/KS.png`,
+  // `${BASE}/images/QC.png`,
+  // `${BASE}/images/QD.png`,
+  // `${BASE}/images/QH.png`,
+  // `${BASE}/images/QS.png`
 ];
 
-console.log('assets', assets[2])
-
-// ajout fichiers en cache
-self.addEventListener("install", (e) => {
-  e.waitUntil(
-    caches.open(staticCacheName).then((cache) => {
-      cache.addAll(assets);
-    })
+self.addEventListener("install", (event) => {
+  self.skipWaiting();
+  event.waitUntil(
+    (async () => {
+      const cache = await caches.open(PREFIX);
+      await Promise.all(
+        [...CACHED_FILES, "/offline.html"].map((path) => {
+          return cache.add(new Request(path));
+        }));
+    })()
   );
+  console.log(`${PREFIX} Install`);
+});
+
+self.addEventListener("activate", (event) => {
+  clients.claim();
+  event.waitUntil((async () => {
+    const keys = await caches.keys();
+    await Promise.all(
+      keys.map((key) => {
+        if (!key.includes(PREFIX)) {
+          return caches.delete(key);
+        }
+      })
+    )
+  })()
+  );
+  console.log(`${PREFIX} Active`);
 });
 
 self.addEventListener("fetch", (event) => {
-  event.respondWith(
-    caches.match(event.request).then(function (response) {
-      // Cache hit - return response
-      if (response) {
-        return response;
-      }
-
-      // IMPORTANT: Cloner la requête.
-      // Une requete est un flux et est à consommation unique
-      // Il est donc nécessaire de copier la requete pour pouvoir l'utiliser et la servir
-      var fetchRequest = event.request.clone();
-
-      return fetch(fetchRequest).then(function (response) {
-        if (!response || response.status !== 200 || response.type !== "basic") {
-          return response;
+  console.log(
+    `${PREFIX} Fetching : ${event.request.url}, Mode : ${event.request.mode}`
+  );
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      (async () => {
+        try {
+          const preloadResponse = await event.preloadResponse
+          if (preloadResponse) {
+            return preloadResponse
+          }
+          return await fetch(event.request)
+        } catch (e) {
+          const cache = await caches.open(PREFIX);
+          return await cache.match("/offline.html");
         }
-
-        // IMPORTANT: Même constat qu'au dessus, mais pour la mettre en cache
-        var responseToCache = response.clone();
-
-        caches.open(staticCacheName).then(function (cache) {
-          cache.put(event.request, responseToCache);
-        });
-
-        return response;
-      });
-    })
-  );
-});
-
-// supprimer caches
-self.addEventListener("activate", (e) => {
-  e.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys
-          .filter((key) => key !== staticCacheName)
-          .map((key) => caches.delete(key))
-      );
-    })
-  );
+      })()
+    );
+  } else if (CACHED_FILES.includes(event.request.url)) {
+    event.respondWith(caches.match(event.request));
+  } else if (LAZY_CACHE.includes(event.request.url)) {
+    event.respondWith(
+      (async () => {
+        try {
+          const cache = await caches.open(PREFIX);
+          const preloadResponse = await event.preloadResponse
+          if (preloadResponse) {
+            cache.put(event.request, preloadResponse.clone());
+            return preloadResponse
+          }
+          const networkResponse = await fetch(event.request);
+          cache.put(event.request, networkResponse.clone());
+          return networkResponse;
+        } catch (e) {
+          return await caches.match(event.request);
+        }
+      })()
+    );
+  }
 });

@@ -2,11 +2,10 @@
   "name": "Battle Card Game",
   "short_name": "Battle",
   "description": "It is a battle card game",
-  "start_url": "/index.html",
-  "id": "/index.html",
+  "start_url": "/?source=pwa",
   "display": "standalone",
-  "theme_color": "#ffffff",
-  "background_color": "#ffffff",
+  "theme_color": "green",
+  "background_color": "green",
   "orientation": "portrait-primary",
   "icons": [
     {
@@ -38,7 +37,7 @@
       "src": "/images/192x192.png",
       "sizes": "192x192",
       "type": "image/png",
-      "purpose": "any maskable"
+      "purpose": "maskable"
     },
     {
       "src": "/images/384x384.png",

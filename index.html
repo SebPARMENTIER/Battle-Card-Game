@@ -6,13 +6,19 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Battle Card Game</title>
     <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/images/96x96.png" sizes="96x96">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <meta name="theme-color" content="#ffffff">
+    <!-- <link rel="apple-touch-icon" href="/images/96x96.png" sizes="96x96"> -->
+    <!-- <meta http-equiv="X-UA-Compatible" content="ie=edge"> -->
+    <!-- <meta name="theme-color" content="#ffffff"> -->
+    <script>
+      window.addEventListener('load', () => {
+        if ("serviceWorker" in navigator) {
+        navigator.serviceWorker.register('/serviceWorker.js')
+        }
+      })
+    </script>
   </head>
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-    <script type="module" src="/src/sw.js"></script>
   </body>
 </html>
