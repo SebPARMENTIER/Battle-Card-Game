@@ -1,5 +1,5 @@
 const BASE = location.protocol + "//" + location.host;
-const PREFIX = "V1";
+const PREFIX = "V2";
 const CACHED_FILES = [
   // `${BASE}/src/main.jsx`,
   // `${BASE}/src/App.jsx`,
@@ -83,10 +83,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(PREFIX);
-      await Promise.all(
-        [...CACHED_FILES, "/offline.html"].map((path) => {
-          return cache.add(new Request(path));
-        }));
+      await cache.addAll([...CACHED_FILES, "/offline.html"]);
     })()
   );
   console.log(`${PREFIX} Install`);
