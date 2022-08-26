@@ -86,7 +86,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(PREFIX);
-      await cache.addAll(["/offline.html"]);
+      await cache.addAll(CACHED_FILES);
     })()
   );
   console.log(`${PREFIX} Install`);
