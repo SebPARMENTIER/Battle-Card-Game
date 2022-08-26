@@ -42,6 +42,9 @@ const CACHED_FILES = [
   `${BASE}/images/QH.png`,
   `${BASE}/images/QS.png`
 ];
+
+console.log('Cached_files', CACHED_FILES);
+
 const LAZY_CACHE = [
   // `${BASE}/src/assets/data/card.js`,
   // `${BASE}/images/0C.png`,
