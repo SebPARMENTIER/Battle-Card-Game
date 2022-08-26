@@ -1,5 +1,5 @@
 const BASE = location.protocol + "//" + location.host;
-const PREFIX = "V3";
+const PREFIX = "V4";
 const CACHED_FILES = [
   // `${BASE}/src/main.jsx`,
   // `${BASE}/src/App.jsx`,
@@ -86,7 +86,7 @@ self.addEventListener("install", (event) => {
   event.waitUntil(
     (async () => {
       const cache = await caches.open(PREFIX);
-      await cache.addAll(CACHED_FILES);
+      await cache.addAll([CACHED_FILES]);
     })()
   );
   console.log(`${PREFIX} Install`);
